@@ -7,6 +7,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import Employee from '../pages/employee/employee';
 import MyTasks from "../pages/mytasks/myTasks";
 import AllTasks from "../pages/alltasks/alltasks";
+import { PAGES } from "../components/Navigator";
 
 const RoutesComp: FC = () => {
   const { user } = useAuthContext();
@@ -15,24 +16,24 @@ const RoutesComp: FC = () => {
       <Route path="/"
         element={user ? <MyTasks /> : <Login />}
       />
-      <Route path="/AllTasks"
+      <Route path={PAGES.ALL_TASKS.href}
         element={user?.admin ? <AllTasks /> : <Navigate replace to={"/"} />}
       />
-      <Route path="/Login"
+      <Route path={PAGES.LOGIN.href}
         element={user ? <Navigate replace to="/" /> : <Login />}
       />
-      <Route path="/Signup"
+      <Route path={PAGES.SIGNUP.href}
         element={user ? <Navigate replace to="/" /> : <Signup />}
       />
-      <Route path="/Create"
+      <Route path={PAGES.CREATE_TASK.href}
         element={user?.admin ? <Create /> : <Navigate replace to="/" />}
       />
       <Route
-        path="/Tasks"
+        path={PAGES.TASKS.href}
         element={user ? <MyTasks /> : <Navigate replace to="/Login" />}
       />
       <Route
-        path="/Employee"
+        path={PAGES.EMPLOYEE.href}
         element={user?.admin ? <Employee /> : <Navigate replace to="/Login" />}
       />
     </Routes>

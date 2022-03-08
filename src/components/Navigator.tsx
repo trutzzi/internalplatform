@@ -10,30 +10,30 @@ import { useSignout } from '../hooks/useSignout';
 type UserRoleCase = 'GUEST' | 'ADMIN' | 'EMPLOYEE';
 const title = 'Platform'
 
-const PAGES = {
+export const PAGES = {
   CREATE_TASK: {
     title: 'Create Task',
-    href: 'Create'
+    href: 'create-task'
   },
   ALL_TASKS: {
     title: 'All tasks',
-    href: 'AllTasks'
+    href: 'all-tasks'
   },
   TASKS: {
     title: 'My Tasks',
-    href: 'Tasks'
+    href: 'my-tasks'
   },
   EMPLOYEE: {
     title: 'My Employee',
-    href: 'Employee'
+    href: 'my-employee'
   },
   LOGIN: {
     title: 'Login',
-    href: 'Login'
+    href: 'signin'
   },
   SIGNUP: {
     title: 'Signup',
-    href: 'Signup'
+    href: 'signup'
   }
 };
 
