@@ -1,20 +1,22 @@
 import { CircularProgress, Container, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react"
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { useFireStore, User } from "../../hooks/useFirestore";
+import { useFireStore } from "../../hooks/useFirestore";
 import { TableDefinition } from "./tableDefinition";
 import TableData from './tableData'
 
 const AllTasks = () => {
   const { getCollectionsBy: allMyEmployeeTasks } = useFireStore('tasks')
   const { getCollectionsBy } = useFireStore('users')
-  const [users, setUsers] = useState<null | TableDefinition[]>(null);
+  const [data, setData] = useState<null | TableDefinition[]>(null);
   const { user, authIsReady } = useAuthContext();
-  const [userNames, setUserNames] = useState([]);
 
   useEffect(() => {
+    /**
+     * Autoinvoke function for get employeeName for each Uid
+     * this is the only way to get name from another collection 
+     */
     (async () => {
-
       if (authIsReady) {
         const requestNames: any = [];
         if (user) {
@@ -26,11 +28,11 @@ const AllTasks = () => {
                 return { ...item, id: index }
               });
             })
-          const userRequested = await Promise.all(requestNames).then(value => value);
-          const superReqAll = ([].concat.apply([], userRequested));
-          const getName = (uid: string) => superReqAll.filter((user: any) => user.uid == uid)
-          const newName = collectionRequest.map((user: any) => ({ ...user, user: getName(user.assigned) }))
-          setUsers(newName)
+          const allNameRequested = await Promise.all(requestNames).then(value => value);
+          const wrappedRequests = ([].concat.apply([], allNameRequested));
+          const getName = (uid: string) => wrappedRequests.filter((user: any) => user.uid === uid)
+          const attachNames = collectionRequest.map((user: any) => ({ ...user, user: getName(user.assigned) }))
+          setData(attachNames)
         }
       }
     })();
@@ -39,9 +41,9 @@ const AllTasks = () => {
   return (
     <Container>
       <Grid>
-        <Typography variant="h3" style={{ textTransform: 'capitalize' }} component="div" gutterBottom>All employee Tasks</Typography>
+        <Typography variant="h3" style={{ textTransform: 'capitalize' }} component="div" gutterBottom>All employee's Tasks</Typography>
         <Grid item>
-          {users ? <TableData data={users} /> : <CircularProgress />}
+          {data ? <TableData data={data} /> : <CircularProgress />}
         </Grid>
       </Grid>
     </Container>

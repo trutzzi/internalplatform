@@ -1,5 +1,4 @@
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import moment from "moment";
 import Moment from 'react-moment';
 
 export type TableDefinition = {

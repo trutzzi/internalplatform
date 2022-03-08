@@ -10,7 +10,7 @@ type DropdownAsyncProps = {
 }
 
 const DropdownAsync: FC<DropdownAsyncProps> = ({ items, handleChange, label }) => {
-  const renderItems = () => items.map(item => <MenuItem value={item.value}>{item.label}</MenuItem>)
+  const renderItems = () => items.map((item, index) => <MenuItem key={index} value={item.value}>{item.label}</MenuItem>)
   return (<>
     <InputLabel>{label}</InputLabel>
     <Select

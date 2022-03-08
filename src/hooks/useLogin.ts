@@ -21,7 +21,7 @@ export const useLogin = () => {
       
       // TODO: FIx this type
       const isAdmin: any = await getCollectionBy('uid', res.user.uid);
-      //   dispatch logout action
+      
       const userWithProps = { ...res.user, admin: isAdmin.admin };
       dispatch({ type: "LOGIN", payload: userWithProps });
 

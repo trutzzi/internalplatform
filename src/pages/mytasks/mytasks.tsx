@@ -4,7 +4,6 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import { useFireStore } from "../../hooks/useFirestore";
 import { TableDefinition } from "./tableDefinition";
 import TableData from './tableData'
-import useSnackBars from "../../hooks/useSnackbar";
 
 const MyTasks = () => {
   const { getCollectionsBy } = useFireStore('tasks')
@@ -24,7 +23,6 @@ const MyTasks = () => {
         }
       }
     })();
-
   }, []);
 
   return (

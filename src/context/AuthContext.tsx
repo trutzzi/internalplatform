@@ -1,6 +1,7 @@
 import { createContext, Reducer, useEffect, useReducer } from "react";
 import { projectAuth } from "../firebase/config";
 import { Query } from "@firebase/firestore-types";
+import { useFireStore } from "../hooks/useFirestore";
 
 type ContextProps = {
   user: {
@@ -42,7 +43,7 @@ export const authReducer: Reducer<State, Action> = (
     case "LOGIN":
       return { ...state, user: action.payload };
     case "LOGOUT":
-      return { ...state, user: null };
+      return { ...state, user: null, authIsReady: false };
     case "AUTH_IS_READY":
       return { ...state, user: action.payload, authIsReady: true };
     default:
@@ -54,13 +55,22 @@ export const AuthContext = createContext<ContextProps>(initialState);
 
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  const { getCollectionBy } = useFireStore('users')
 
   console.log("auth context state ", state);
 
   useEffect(() => {
-    const unsub = projectAuth.onAuthStateChanged((user) => {
-      dispatch({ type: "AUTH_IS_READY", payload: user });
-      unsub();
+    projectAuth.onAuthStateChanged((user) => {
+      (async () => {
+        /**
+         * Check if user belong to current db after resume session
+         */
+        if (user) {
+          const isAdmin: any = await getCollectionBy('uid', user?.uid);
+          const userWithProps = { ...user, admin: isAdmin.admin };
+          dispatch({ type: "AUTH_IS_READY", payload: userWithProps });
+        }
+      })()
     });
   }, []);
 

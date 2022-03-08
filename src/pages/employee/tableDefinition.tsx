@@ -1,4 +1,4 @@
-import { GridColDef, GridValueFormatterParams } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 
 export type TableDefinition = {
   displayName: string,

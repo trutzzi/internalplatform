@@ -1,7 +1,8 @@
 import { useReducer, useEffect, useState, Reducer } from "react";
-import { projectRecipeBook } from "../firebase/config";
-import { collection, addDoc, getDocs, query, where, DocumentData } from 'firebase/firestore/lite';
+import { projectRecipeBook as projectDb } from "../firebase/config";
+import { collection, addDoc, getDocs, query, where, DocumentData, deleteDoc } from 'firebase/firestore/lite';
 import useSnackBars from "./useSnackbar";
+import { doc } from "@firebase/firestore";
 
 const initialState = {
   document: null,
@@ -54,6 +55,13 @@ const firestoreReducer: Reducer<any, any> = (state, action) => {
         success: true,
         error: null,
       };
+    case "DELETED_DOCUMENT":
+      return {
+        isPending: false,
+        document: action.payload,
+        success: true,
+        error: null,
+      };
     case "ERROR":
       return {
         document: null,
@@ -72,7 +80,7 @@ export const useFireStore = (collectionSelect: string) => {
   const [isCancelled, setIsCancelled] = useState(false);
 
   //collection ref
-  const ref = collection(projectRecipeBook, collectionSelect);
+  const ref = collection(projectDb, collectionSelect);
 
   // only dispatch if not cancelled
   const dispatchIfNotCancelled = (action: any) => {
@@ -83,7 +91,7 @@ export const useFireStore = (collectionSelect: string) => {
 
   // get collection by specific field return one
   const getCollectionBy = async (queryDoc: string, guid: string) => {
-    const userRef = collection(projectRecipeBook, collectionSelect);
+    const userRef = collection(projectDb, collectionSelect);
     const userQuery = query(userRef, where(queryDoc, "==", guid))
     const querySnapshot = await getDocs(userQuery);
     let result;
@@ -95,7 +103,7 @@ export const useFireStore = (collectionSelect: string) => {
 
   // Get collection by specific field return all
   const getCollectionsBy = async (queryDoc: string, guid: string) => {
-    const userRef = collection(projectRecipeBook, collectionSelect);
+    const userRef = collection(projectDb, collectionSelect);
     const userQuery = query(userRef, where(queryDoc, "==", guid))
     const querySnapshot = await getDocs(userQuery);
     const results: any[] = [];
@@ -106,7 +114,7 @@ export const useFireStore = (collectionSelect: string) => {
   };
 
   const getCollection = async () => {
-    const docRef = collection(projectRecipeBook, collectionSelect);
+    const docRef = collection(projectDb, collectionSelect);
     const docSnap = await getDocs(docRef);
     let myArray: DocumentData = [];
     docSnap.forEach((doc) => {
@@ -149,7 +157,20 @@ export const useFireStore = (collectionSelect: string) => {
   };
 
   // delete document
-  const deleteDocument = async (id: string) => { };
+  const deleteDocument = async (id: string) => {
+    dispatch({ type: "IS_PENDING" });
+    try {
+      const addedDocument = deleteDoc(doc(projectDb, "cities", "DC"));
+      addAlert({ type: "success", text: "Task was deleted" })
+      dispatchIfNotCancelled({
+        type: "DELETED_DOCUMENT",
+        payload: addedDocument,
+      });
+    } catch (error) {
+      addAlert({ type: "error", text: "Unknow error" })
+      dispatchIfNotCancelled({ type: "ERROR", payload: error });
+    }
+  };
 
   useEffect(() => {
     return () => setIsCancelled(true);

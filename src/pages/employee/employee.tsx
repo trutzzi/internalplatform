@@ -29,7 +29,6 @@ const Employee = () => {
         }
       }
     })();
-
   }, []);
 
   return (

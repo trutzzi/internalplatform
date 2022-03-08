@@ -36,9 +36,9 @@ export class ErrorBoundary extends React.Component<MyProps, MyState>{
           <Grid item>
             <h2>Something went wrong.</h2>
             <p>This is not your fault!<br />
-              Write an email to <a href="emailto: trutzzi@yahoo.ro">trutzzi@yahoo.ro</a> and hope for the best.</p>
+              Write an email to <a href="mailto: trutzzi@yahoo.ro">trutzzi@yahoo.ro</a> and hope for the best.</p>
             <details style={{ whiteSpace: 'pre-wrap', color: 'red' }}>
-              <summary>Nerd info's</summary>
+              <summary>Nerd info</summary>
               {this.state.error && this.state.error.toString()}
               {this.state.errorInfo.componentStack}
             </details>

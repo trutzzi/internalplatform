@@ -53,7 +53,7 @@ export default function Create({ }) {
   return (
     <Container>
       <Box component="form" onSubmit={handleSubmit}>
-        <Typography variant="h3" component="div" gutterBottom> Add a New task</Typography>
+        <Typography variant="h3" component="div" gutterBottom> Add task</Typography>
 
         <Grid container direction={"column"} rowSpacing={2}>
           <Grid item >
@@ -76,6 +76,9 @@ export default function Create({ }) {
             <TextareaAutosize
               style={{
                 width: 190,
+                borderRadius: 3,
+                borderColor: '#999',
+                borderWidth: 1,
                 height: 80,
                 padding: 15
               }}
@@ -94,8 +97,6 @@ export default function Create({ }) {
             <TextField
               label="Deadline"
               type="datetime-local"
-              defaultValue={new Date()}
-              // sx={{ width: 250 }}
               onChange={(e) => setDeadline(e.target.value)}
               required
             />

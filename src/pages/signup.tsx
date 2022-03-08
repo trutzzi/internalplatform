@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { useSignup } from "../hooks/useSignup";
 import { Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
-import useSnackBars from "../hooks/useSnackbar";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [password, setPassword] = useState("");
   const { signup, isPending, error } = useSignup();
-  const { addAlert } = useSnackBars();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

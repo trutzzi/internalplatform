@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { AppBar, Box, Toolbar, Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material';
@@ -7,32 +7,68 @@ import { Link } from "react-router-dom";
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useSignout } from '../hooks/useSignout';
 
-
+type UserRoleCase = 'GUEST' | 'ADMIN' | 'EMPLOYEE';
 const title = 'Platform'
-const defaultPages: string[] = [];
+
+const PAGES = {
+  CREATE_TASK: {
+    title: 'Create Task',
+    href: 'Create'
+  },
+  ALL_TASKS: {
+    title: 'All tasks',
+    href: 'AllTasks'
+  },
+  TASKS: {
+    title: 'My Tasks',
+    href: 'Tasks'
+  },
+  EMPLOYEE: {
+    title: 'My Employee',
+    href: 'Employee'
+  },
+  LOGIN: {
+    title: 'Login',
+    href: 'Login'
+  },
+  SIGNUP: {
+    title: 'Signup',
+    href: 'Signup'
+  }
+};
+
+const getPageByRole = (role: UserRoleCase) => {
+  const { CREATE_TASK, ALL_TASKS, TASKS, EMPLOYEE, LOGIN, SIGNUP } = PAGES;
+  switch (role) {
+    case 'ADMIN':
+      return [CREATE_TASK, ALL_TASKS, TASKS, EMPLOYEE];
+    case 'EMPLOYEE':
+      return [TASKS];
+    case 'GUEST':
+      return [LOGIN, SIGNUP];
+  }
+};
 
 export const Navigator = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const { user, authIsReady } = useAuthContext();
-  const [pages, setPages] = React.useState(defaultPages);
+  const [pages, setPages] = useState<any>(null);
   const { logout } = useSignout();
   const userMenu = [{ title: 'Logout', action: logout }];
 
   document.title = title;
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Add or remove options based on login logic
     if (authIsReady) {
-      if (user) {
-        if (user.admin) {
-          setPages([...defaultPages, 'Create', 'AllTasks', 'Tasks', 'Employee'])
-        } else {
-          setPages([...defaultPages, 'Tasks'])
-        }
+      if (user?.admin) {
+        setPages(getPageByRole('ADMIN'))
       } else {
-        setPages([...defaultPages, 'Login', 'Signup'])
+        setPages(getPageByRole('EMPLOYEE'))
       }
+    } else {
+      setPages(getPageByRole('GUEST'))
     }
   }, [authIsReady, user]);
 
@@ -50,7 +86,35 @@ export const Navigator = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const renderMobileNav = () => {
+    const links = [];
+    for (const page in pages) {
+      console.log(pages[page])
+      links.push(
+        <Link style={{ textDecoration: 'none', color: 'black' }} key={page} to={`/${page}`}>
+          <MenuItem key={page} onClick={handleCloseNavMenu}>
+            <Typography textAlign="center">{pages[page].title}</Typography>
+          </MenuItem>
+        </Link>
+      )
+    }
+    return links;
+  }
 
+  const renderDesktopNav = () => {
+    const links = [];
+    for (const page in pages) {
+      links.push(<Link key={page} to={`/${pages[page].href}`}><Button
+        style={{ color: 'white', textDecoration: 'none' }}
+        key={page}
+        onClick={handleCloseNavMenu}
+      >
+        {pages[page].title}
+      </Button>
+      </Link>)
+    }
+    return links;
+  }
   return (
     <AppBar style={{ marginBottom: '50px' }} position="static">
       <Container>
@@ -94,13 +158,7 @@ export const Navigator = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page, key) => (
-                <Link style={{ textDecoration: 'none', color: 'black' }} key={key} to={`/${page}`}>
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                </Link>
-              ))}
+              {renderMobileNav()}
             </Menu>
           </Box>
           <Typography
@@ -113,16 +171,7 @@ export const Navigator = () => {
             {title}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page, key) => (
-              <Link key={key} to={`/${page}`}><Button
-                style={{ color: 'white' }}
-                key={page}
-                onClick={handleCloseNavMenu}
-              >
-                {page}
-              </Button>
-              </Link>
-            ))}
+            {renderDesktopNav()}
           </Box>
 
           {user && <Box sx={{ flexGrow: 0 }}>
