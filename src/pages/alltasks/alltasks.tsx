@@ -11,31 +11,33 @@ const AllTasks = () => {
   const [data, setData] = useState<null | TableDefinition[]>(null);
   const { user, authIsReady } = useAuthContext();
 
+  const fetchData = async () => {
+    if (authIsReady) {
+      const requestNames: any = [];
+      if (user) {
+        const collectionRequest = await allMyEmployeeTasks('uid', user.uid, fetchData)
+          .then((results: TableDefinition[]) => {
+            // add uid as id for table data required field
+            return results.map((item: TableDefinition) => {
+              requestNames.push(getCollectionsBy('uid', item.assigned));
+              return item;
+            });
+          })
+        const allNameRequested = await Promise.all(requestNames).then(value => value);
+        const wrappedRequests = ([].concat.apply([], allNameRequested));
+        const getName = (uid: string) => wrappedRequests.filter((user: any) => user.uid === uid)
+        const attachNames = collectionRequest.map((user: any) => ({ ...user, user: getName(user.assigned) }))
+        setData(attachNames)
+      }
+    }
+  };
+
   useEffect(() => {
     /**
      * Autoinvoke function for get employeeName for each Uid
      * this is the only way to get name from another collection 
      */
-    (async () => {
-      if (authIsReady) {
-        const requestNames: any = [];
-        if (user) {
-          const collectionRequest = await allMyEmployeeTasks('uid', user.uid)
-            .then((results: TableDefinition[]) => {
-              // add uid as id for table data required field
-              return results.map((item: TableDefinition, index) => {
-                requestNames.push(getCollectionsBy('uid', item.assigned));
-                return { ...item, id: index }
-              });
-            })
-          const allNameRequested = await Promise.all(requestNames).then(value => value);
-          const wrappedRequests = ([].concat.apply([], allNameRequested));
-          const getName = (uid: string) => wrappedRequests.filter((user: any) => user.uid === uid)
-          const attachNames = collectionRequest.map((user: any) => ({ ...user, user: getName(user.assigned) }))
-          setData(attachNames)
-        }
-      }
-    })();
+    fetchData()
   }, []);
 
   return (

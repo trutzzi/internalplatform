@@ -5,6 +5,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { Box } from "@mui/system";
 import { Button, Grid, TextField, Typography, TextareaAutosize, Container, CircularProgress } from "@mui/material";
 import DropdownAsync from "../components/DropdownAsync";
+import { PAGES } from "../components/Navigator";
 
 export default function Create({ }) {
   const [title, setTitle] = useState("");
@@ -15,7 +16,9 @@ export default function Create({ }) {
 
   const { addDocument, response } = useFireStore("tasks");
   const { getCollectionsBy } = useFireStore('users');
+
   const navigate = useNavigate();
+
   const { user } = useAuthContext();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -25,9 +28,10 @@ export default function Create({ }) {
       title,
       description,
       deadline,
+      done: false,
       assigned
     });
-    navigate("/");
+    navigate('/' + PAGES.ALL_TASKS.href);
   };
 
   useEffect(() => {
@@ -89,9 +93,9 @@ export default function Create({ }) {
               minRows={1}
               required
             />
-            <span style={{ display: 'block' }}>
+            <div>
               {description && (description.length + '/ 190 chars description')}
-            </span>
+            </div>
           </Grid>
           <Grid item>
             <TextField

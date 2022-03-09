@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { getFirestore } from 'firebase/firestore';
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
@@ -17,7 +17,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // init services
-const projectRecipeBook = db;
+const projectDb = db;
 const projectAuth = getAuth();
 
-export { projectRecipeBook, projectAuth };
+export { projectDb, projectAuth };

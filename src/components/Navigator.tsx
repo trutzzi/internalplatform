@@ -8,7 +8,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { useSignout } from '../hooks/useSignout';
 
 type UserRoleCase = 'GUEST' | 'ADMIN' | 'EMPLOYEE';
-const title = 'Platform'
+const title = 'PLATFORM'
 
 export const PAGES = {
   CREATE_TASK: {
@@ -60,16 +60,16 @@ export const Navigator = () => {
   document.title = title;
 
   useEffect(() => {
-    // Add or remove options based on login logic
-    if (authIsReady) {
-      if (user?.admin) {
-        setPages(getPageByRole('ADMIN'))
-      } else {
-        setPages(getPageByRole('EMPLOYEE'))
-      }
-    } else {
+    // Add or remove link navigation based on login logic
+    const isAdmin = user?.admin;
+    const isLoggedIn = authIsReady;
+    isLoggedIn
+      ?
+      isAdmin ?
+        setPages(getPageByRole('ADMIN')) : setPages(getPageByRole('EMPLOYEE'))
+      :
       setPages(getPageByRole('GUEST'))
-    }
+
   }, [authIsReady, user]);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -89,9 +89,8 @@ export const Navigator = () => {
   const renderMobileNav = () => {
     const links = [];
     for (const page in pages) {
-      console.log(pages[page])
       links.push(
-        <Link style={{ textDecoration: 'none', color: 'black' }} key={page} to={`/${page}`}>
+        <Link style={{ textDecoration: 'none' }} key={page} to={`/${pages[page].href}`}>
           <MenuItem key={page} onClick={handleCloseNavMenu}>
             <Typography textAlign="center">{pages[page].title}</Typography>
           </MenuItem>
@@ -104,13 +103,15 @@ export const Navigator = () => {
   const renderDesktopNav = () => {
     const links = [];
     for (const page in pages) {
-      links.push(<Link key={page} to={`/${pages[page].href}`}><Button
-        style={{ color: 'white', textDecoration: 'none' }}
-        key={page}
-        onClick={handleCloseNavMenu}
-      >
-        {pages[page].title}
-      </Button>
+      links.push(<Link style={{ textDecoration: 'none' }} key={page} to={`/${pages[page].href}`}>
+        <Button
+          variant='text'
+          color='secondary'
+          key={page}
+          onClick={handleCloseNavMenu}
+        >
+          {pages[page].title}
+        </Button>
       </Link>)
     }
     return links;
@@ -122,7 +123,7 @@ export const Navigator = () => {
           <Typography
             variant="h4"
             noWrap
-            color='white'
+            color='secondary'
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
@@ -178,7 +179,7 @@ export const Navigator = () => {
             <Tooltip title="Open user menu">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar style={{ marginRight: '5px' }} alt={user.displayName} src={'feature'} />
-                <Typography color="white" variant='h5'>{user.displayName}</Typography>
+                <Typography color="secondary" style={{ textTransform: 'uppercase' }} variant='h6'>{user.displayName}</Typography>
               </IconButton>
             </Tooltip>
             <Menu

@@ -1,8 +1,7 @@
 import { useReducer, useEffect, useState, Reducer } from "react";
-import { projectRecipeBook as projectDb } from "../firebase/config";
-import { collection, addDoc, getDocs, query, where, DocumentData, deleteDoc } from 'firebase/firestore/lite';
+import { projectDb } from "../firebase/config";
+import { collection, addDoc, getDocs, query, where, DocumentData, deleteDoc, doc, onSnapshot } from '@firebase/firestore';
 import useSnackBars from "./useSnackbar";
-import { doc } from "@firebase/firestore";
 
 const initialState = {
   document: null,
@@ -16,6 +15,7 @@ type Task = {
   title: string;
   description: string;
   deadline: string;
+  done: boolean;
   assigned: string;
 };
 
@@ -90,9 +90,14 @@ export const useFireStore = (collectionSelect: string) => {
   };
 
   // get collection by specific field return one
+  /**
+   * 
+   * @param queryDoc Document name
+   * @param guid Search in query
+   * @returns  return collection [] of {}
+   */
   const getCollectionBy = async (queryDoc: string, guid: string) => {
-    const userRef = collection(projectDb, collectionSelect);
-    const userQuery = query(userRef, where(queryDoc, "==", guid))
+    const userQuery = query(ref, where(queryDoc, "==", guid))
     const querySnapshot = await getDocs(userQuery);
     let result;
     querySnapshot.forEach((doc) => {
@@ -102,20 +107,28 @@ export const useFireStore = (collectionSelect: string) => {
   };
 
   // Get collection by specific field return all
-  const getCollectionsBy = async (queryDoc: string, guid: string) => {
-    const userRef = collection(projectDb, collectionSelect);
-    const userQuery = query(userRef, where(queryDoc, "==", guid))
+  /**
+   * 
+   * @param queryDoc Document name
+   * @param guid guid to query
+   * @param callback callback refresh or any function
+   * @returns return collections with multipe results as  [] of {}
+   */
+  const getCollectionsBy = async (queryDoc: string, guid: string, callback: Function = () => null) => {
+    const userQuery = await query(ref, where(queryDoc, "==", guid))
+    onSnapshot(userQuery, (doc) => {
+      callback(doc)
+    });
     const querySnapshot = await getDocs(userQuery);
     const results: any[] = [];
     querySnapshot.forEach((doc) => {
-      results.push(doc.data())
+      results.push({ ...doc.data(), id: doc.id })
     });
     return results;
   };
 
   const getCollection = async () => {
-    const docRef = collection(projectDb, collectionSelect);
-    const docSnap = await getDocs(docRef);
+    const docSnap = await getDocs(ref);
     let myArray: DocumentData = [];
     docSnap.forEach((doc) => {
       myArray.push(doc.data())
@@ -160,11 +173,11 @@ export const useFireStore = (collectionSelect: string) => {
   const deleteDocument = async (id: string) => {
     dispatch({ type: "IS_PENDING" });
     try {
-      const addedDocument = deleteDoc(doc(projectDb, "cities", "DC"));
+      const deletedDocument = await deleteDoc(doc(projectDb, collectionSelect, id));
       addAlert({ type: "success", text: "Task was deleted" })
       dispatchIfNotCancelled({
         type: "DELETED_DOCUMENT",
-        payload: addedDocument,
+        payload: deletedDocument,
       });
     } catch (error) {
       addAlert({ type: "error", text: "Unknow error" })
