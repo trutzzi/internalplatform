@@ -1,37 +1,36 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
-import { useFireStore } from "../hooks/useFirestore";
-import { useAuthContext } from "../hooks/useAuthContext";
-import { Box } from "@mui/system";
-import { Button, Grid, TextField, Typography, TextareaAutosize, Container, CircularProgress } from "@mui/material";
-import DropdownAsync from "../components/DropdownAsync";
-import { PAGES } from "../components/Navigator";
+import { useState, useEffect } from 'react';
+import { Box } from '@mui/system';
+import {
+  Button, Grid, TextField, Typography, TextareaAutosize, Container, CircularProgress,
+} from '@mui/material';
+import { useFireStore } from '../hooks/useFirestore';
+import { useAuthContext } from '../hooks/useAuthContext';
+import DropdownAsync from '../components/DropdownAsync';
 
-export default function Create({ }) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [deadline, setDeadline] = useState("");
-  const [assigned, setAssigned] = useState("");
+export default function Create() {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [deadline, setDeadline] = useState('');
+  const [assigned, setAssigned] = useState('');
   const [assignedDropdown, setAssignedDropdown] = useState<{ label: string, value: string | number }[] | null>(null);
 
-  const { addDocument, response } = useFireStore("tasks");
+  const { addDocument, response } = useFireStore('tasks');
   const { getCollectionsBy } = useFireStore('users');
-
-  const navigate = useNavigate();
 
   const { user } = useAuthContext();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    user && addDocument({
-      uid: user.uid,
-      title,
-      description,
-      deadline,
-      done: false,
-      assigned
-    });
-    navigate('/' + PAGES.ALL_TASKS.href);
+    if (user) {
+      addDocument({
+        uid: user.uid,
+        title,
+        description,
+        deadline,
+        done: false,
+        assigned,
+      });
+    }
   };
 
   useEffect(() => {
@@ -39,18 +38,16 @@ export default function Create({ }) {
       async () => {
         if (user) {
           const optionsUsers = await getCollectionsBy('supervisorId', user.uid);
-          const options = optionsUsers.map((user) => {
-            return { label: user.displayName, value: user.uid }
-          })
-          setAssignedDropdown(options)
+          const options = optionsUsers.map((option) => ({ label: option.displayName, value: option.uid }));
+          setAssignedDropdown(options);
         }
       }
-    )()
+    )();
 
     if (response.success) {
-      setTitle("");
-      setDescription("");
-      setDeadline("");
+      setTitle('');
+      setDescription('');
+      setDeadline('');
     }
   }, [response.success]);
 
@@ -59,8 +56,8 @@ export default function Create({ }) {
       <Box component="form" onSubmit={handleSubmit}>
         <Typography variant="h3" component="div" gutterBottom> Add task</Typography>
 
-        <Grid container direction={"column"} rowSpacing={2}>
-          <Grid item >
+        <Grid container direction="column" rowSpacing={2}>
+          <Grid item>
             <TextField
               placeholder="Title"
               label="Title"
@@ -71,12 +68,12 @@ export default function Create({ }) {
             />
           </Grid>
 
-          <Grid item >
-            <Grid item >
+          <Grid item>
+            <Grid item>
               {assignedDropdown ? <DropdownAsync label="Employee assigned" handleChange={setAssigned} items={assignedDropdown} /> : <CircularProgress />}
             </Grid>
           </Grid>
-          <Grid item >
+          <Grid item>
             <TextareaAutosize
               style={{
                 width: 190,
@@ -84,7 +81,7 @@ export default function Create({ }) {
                 borderColor: '#999',
                 borderWidth: 1,
                 height: 80,
-                padding: 15
+                padding: 15,
               }}
               placeholder="Description"
               onChange={(e) => setDescription(e.target.value)}
@@ -94,7 +91,7 @@ export default function Create({ }) {
               required
             />
             <div>
-              {description && (description.length + '/ 190 chars description')}
+              {description && (`${description.length}/ 190 chars description`)}
             </div>
           </Grid>
           <Grid item>
@@ -110,6 +107,6 @@ export default function Create({ }) {
           </Grid>
         </Grid>
       </Box>
-    </Container >
+    </Container>
   );
 }

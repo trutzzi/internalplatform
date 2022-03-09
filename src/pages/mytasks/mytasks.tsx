@@ -1,12 +1,14 @@
-import { CircularProgress, Container, Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react"
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { useFireStore } from "../../hooks/useFirestore";
-import { TableDefinition } from "./tableDefinition";
-import TableData from './tableData'
+import {
+  CircularProgress, Container, Grid, Typography,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useAuthContext } from '../../hooks/useAuthContext';
+import { useFireStore } from '../../hooks/useFirestore';
+import { TableDefinition } from './tableDefinition';
+import TableData from './tableData';
 
-const MyTasks = () => {
-  const { getCollectionsBy } = useFireStore('tasks')
+function MyTasks() {
+  const { getCollectionsBy } = useFireStore('tasks');
   const [users, setUsers] = useState<null | TableDefinition[]>(null);
   const { user, authIsReady } = useAuthContext();
 
@@ -15,11 +17,10 @@ const MyTasks = () => {
       if (authIsReady) {
         if (user) {
           const collectionRequest = await getCollectionsBy('assigned', user.uid)
-            .then((results: TableDefinition[]) => {
+            .then((results: TableDefinition[]) =>
               // add uid as id for table data required field
-              return results.map((item: TableDefinition, index) => ({ ...item, id: index }));
-            })
-          setUsers(collectionRequest)
+              results.map((item: TableDefinition, index) => ({ ...item, id: index })));
+          setUsers(collectionRequest);
         }
       }
     })();
@@ -34,6 +35,6 @@ const MyTasks = () => {
         </Grid>
       </Grid>
     </Container>
-  )
+  );
 }
 export default MyTasks;

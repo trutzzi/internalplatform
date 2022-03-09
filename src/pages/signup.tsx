@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { useSignup } from "../hooks/useSignup";
-import { Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
+import { useState } from 'react';
+import {
+  Box, Button, Container, Grid, TextField, Typography,
+} from '@mui/material';
+import { useSignup } from '../hooks/useSignup';
 
 export default function Signup() {
-  const [email, setEmail] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [password, setPassword] = useState('');
   const { signup, isPending, error } = useSignup();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -15,9 +17,9 @@ export default function Signup() {
 
   return (
     <Container>
-      <Box onSubmit={handleSubmit} component="form" >
+      <Box onSubmit={handleSubmit} component="form">
         <Typography variant="h3" component="div" gutterBottom>Signup</Typography>
-        <Grid container direction={"column"} rowSpacing={2}>
+        <Grid container direction="column" rowSpacing={2}>
           <Grid item>
             <TextField
               required
@@ -27,7 +29,7 @@ export default function Signup() {
               value={email}
             />
           </Grid>
-          <Grid item >
+          <Grid item>
             <TextField
               required
               helperText="Password"
@@ -38,7 +40,7 @@ export default function Signup() {
             />
           </Grid>
 
-          <Grid item >
+          <Grid item>
             <TextField
               required
               type="text"
@@ -46,13 +48,13 @@ export default function Signup() {
               onChange={(e) => setDisplayName(e.target.value)}
               value={displayName}
             />
-            <Grid item >
-              {<Button type="submit" disabled={isPending} variant="contained">Signup</Button>}
+            <Grid item>
+              <Button type="submit" disabled={isPending} variant="contained">Signup</Button>
             </Grid>
           </Grid>
           {error && <p>{error}</p>}
-        </Grid >
-      </Box >
+        </Grid>
+      </Box>
     </Container>
   );
 }

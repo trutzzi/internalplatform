@@ -6,17 +6,15 @@ type TableDataProps = {
   data: TableDefinition[];
 };
 
-const TableData: FC<TableDataProps> = ({ data }) => {
-  return (
-    <div style={{ height: 600, width: '100%' }}>
-      <DataGrid
-        rows={data}
-        columns={columnsDefinition}
-        pageSize={25}
-        rowsPerPageOptions={[5]}
-        checkboxSelection
-      />
-    </div>
-  );
-}
-export default TableData
+const TableData: FC<TableDataProps> = ({ data }) => (
+  <div style={{ height: 600, width: '100%' }}>
+    <DataGrid
+      rows={data}
+      columns={columnsDefinition}
+      pageSize={25}
+      rowsPerPageOptions={[5]}
+      checkboxSelection
+    />
+  </div>
+);
+export default TableData;

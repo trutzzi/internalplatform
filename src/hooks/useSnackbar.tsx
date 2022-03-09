@@ -1,6 +1,6 @@
-import { useContext } from 'react'
+import { useContext } from 'react';
 
-import { SnackBarContext } from '../components/SnackbarProvider'
+import { SnackBarContext } from '../components/SnackbarProvider';
 
-const useSnackBars = () => useContext(SnackBarContext)
-export default useSnackBars
+const useSnackBars = () => useContext(SnackBarContext);
+export default useSnackBars;

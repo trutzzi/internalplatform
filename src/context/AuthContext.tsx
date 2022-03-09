@@ -1,7 +1,8 @@
-import { createContext, Reducer, useEffect, useReducer } from "react";
-import { projectAuth } from "../firebase/config";
-import { Query } from "@firebase/firestore-types";
-import { useFireStore } from "../hooks/useFirestore";
+import {
+  createContext, Reducer, Dispatch, useEffect, useReducer,
+} from 'react';
+import { projectAuth } from '../firebase/config';
+import { useFireStore } from '../hooks/useFirestore';
 
 type ContextProps = {
   user: {
@@ -12,7 +13,7 @@ type ContextProps = {
     admin: boolean;
   } | null;
   authIsReady: boolean;
-  dispatch: Function;
+  dispatch: Dispatch<Action>;
 };
 
 type User = {
@@ -27,7 +28,7 @@ type Action = { type: string; payload: User | any };
 const initialState = {
   user: null,
   authIsReady: false,
-  dispatch: Function,
+  dispatch: () => null,
 };
 
 type State = {
@@ -37,14 +38,14 @@ type State = {
 
 export const authReducer: Reducer<State, Action> = (
   state: State,
-  action: Action
+  action: Action,
 ) => {
   switch (action.type) {
-    case "LOGIN":
+    case 'LOGIN':
       return { ...state, user: action.payload };
-    case "LOGOUT":
+    case 'LOGOUT':
       return { ...state, user: null, authIsReady: false };
-    case "AUTH_IS_READY":
+    case 'AUTH_IS_READY':
       return { ...state, user: action.payload, authIsReady: true };
     default:
       return state;
@@ -53,11 +54,11 @@ export const authReducer: Reducer<State, Action> = (
 
 export const AuthContext = createContext<ContextProps>(initialState);
 
-export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
+export function AuthContextProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
-  const { getCollectionBy } = useFireStore('users')
+  const { getCollectionBy } = useFireStore('users');
 
-  console.log("auth context state ", state);
+  console.log('auth context state ', state);
 
   useEffect(() => {
     projectAuth.onAuthStateChanged((user) => {
@@ -68,9 +69,9 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
         if (user) {
           const isAdmin: any = await getCollectionBy('uid', user?.uid);
           const userWithProps = { ...user, admin: isAdmin.admin };
-          dispatch({ type: "AUTH_IS_READY", payload: userWithProps });
+          dispatch({ type: 'AUTH_IS_READY', payload: userWithProps });
         }
-      })()
+      })();
     });
   }, []);
 
@@ -79,4 +80,4 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
       {children}
     </AuthContext.Provider>
   );
-};
+}

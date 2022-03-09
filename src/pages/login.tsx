@@ -1,11 +1,13 @@
-import { Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useLogin } from "../hooks/useLogin";
-import useSnackBars from "../hooks/useSnackbar";
+import {
+  Box, Button, Container, Grid, TextField, Typography,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useLogin } from '../hooks/useLogin';
+import useSnackBars from '../hooks/useSnackbar';
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const { login, isPending, error } = useLogin();
   const { addAlert } = useSnackBars();
 
@@ -14,10 +16,6 @@ export default function Login() {
     login(email, password);
   };
 
-  useEffect(() => {
-    !!error && addAlert({ type: "error", text: error || 'Unknow error' })
-  }, [error])
-
   return (
     <Container>
       <Grid>
@@ -25,7 +23,7 @@ export default function Login() {
           <Typography variant="h3" component="div" gutterBottom>Login</Typography>
           <Grid item>
             <TextField
-              required={true}
+              required
               helperText="Email"
               type="email"
               onChange={(e) => setEmail(e.target.value)}
@@ -35,7 +33,7 @@ export default function Login() {
           </Grid>
           <Grid item>
             <TextField
-              required={true}
+              required
               helperText="Password"
               type="password"
               onChange={(e) => setPassword(e.target.value)}
@@ -43,9 +41,9 @@ export default function Login() {
               autoComplete="on"
             />
           </Grid>
-          {<Button type="submit" disabled={isPending} variant="contained" >Login</Button>}
+          <Button type="submit" disabled={isPending} variant="contained">Login</Button>
         </Box>
-      </Grid >
-    </Container >
+      </Grid>
+    </Container>
   );
 }

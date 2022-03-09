@@ -1,44 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { AppBar, Box, Toolbar, Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material';
+import {
+  AppBar, Box, Toolbar, Menu, Container, Avatar, Button, Tooltip, MenuItem,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useSignout } from '../hooks/useSignout';
 
 type UserRoleCase = 'GUEST' | 'ADMIN' | 'EMPLOYEE';
-const title = 'PLATFORM'
+const title = 'PLATFORM';
 
 export const PAGES = {
   CREATE_TASK: {
     title: 'Create Task',
-    href: 'create-task'
+    href: 'create-task',
   },
   ALL_TASKS: {
     title: 'All tasks',
-    href: 'all-tasks'
+    href: 'all-tasks',
   },
   TASKS: {
     title: 'My Tasks',
-    href: 'my-tasks'
+    href: 'my-tasks',
   },
   EMPLOYEE: {
     title: 'My Employee',
-    href: 'my-employee'
+    href: 'my-employee',
   },
   LOGIN: {
     title: 'Login',
-    href: 'signin'
+    href: 'signin',
   },
   SIGNUP: {
     title: 'Signup',
-    href: 'signup'
-  }
+    href: 'signup',
+  },
 };
 
 const getPageByRole = (role: UserRoleCase) => {
-  const { CREATE_TASK, ALL_TASKS, TASKS, EMPLOYEE, LOGIN, SIGNUP } = PAGES;
+  const {
+    CREATE_TASK, ALL_TASKS, TASKS, EMPLOYEE, LOGIN, SIGNUP,
+  } = PAGES;
   switch (role) {
     case 'ADMIN':
       return [CREATE_TASK, ALL_TASKS, TASKS, EMPLOYEE];
@@ -49,13 +53,13 @@ const getPageByRole = (role: UserRoleCase) => {
   }
 };
 
-export const Navigator = () => {
+export function Navigator() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const { user, authIsReady } = useAuthContext();
   const [pages, setPages] = useState<any>(null);
   const { logout } = useSignout();
-  const userMenu = [{ title: 'Logout', action: logout }];
+  const userMenu = [{ text: 'Logout', action: logout }];
 
   document.title = title;
 
@@ -63,13 +67,15 @@ export const Navigator = () => {
     // Add or remove link navigation based on login logic
     const isAdmin = user?.admin;
     const isLoggedIn = authIsReady;
-    isLoggedIn
-      ?
-      isAdmin ?
-        setPages(getPageByRole('ADMIN')) : setPages(getPageByRole('EMPLOYEE'))
-      :
-      setPages(getPageByRole('GUEST'))
-
+    if (isLoggedIn) {
+      if (isAdmin) {
+        setPages(getPageByRole('ADMIN'));
+      } else {
+        setPages(getPageByRole('EMPLOYEE'));
+      }
+    } else {
+      setPages(getPageByRole('GUEST'));
+    }
   }, [authIsReady, user]);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -94,28 +100,28 @@ export const Navigator = () => {
           <MenuItem key={page} onClick={handleCloseNavMenu}>
             <Typography textAlign="center">{pages[page].title}</Typography>
           </MenuItem>
-        </Link>
-      )
+        </Link>,
+      );
     }
     return links;
-  }
+  };
 
   const renderDesktopNav = () => {
     const links = [];
     for (const page in pages) {
       links.push(<Link style={{ textDecoration: 'none' }} key={page} to={`/${pages[page].href}`}>
         <Button
-          variant='text'
-          color='secondary'
+          variant="text"
+          color="secondary"
           key={page}
           onClick={handleCloseNavMenu}
         >
           {pages[page].title}
         </Button>
-      </Link>)
+      </Link>);
     }
     return links;
-  }
+  };
   return (
     <AppBar style={{ marginBottom: '50px' }} position="static">
       <Container>
@@ -123,7 +129,7 @@ export const Navigator = () => {
           <Typography
             variant="h4"
             noWrap
-            color='secondary'
+            color="secondary"
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
@@ -165,7 +171,7 @@ export const Navigator = () => {
           <Typography
             variant="h4"
             noWrap
-            color='white'
+            color="white"
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
@@ -175,43 +181,47 @@ export const Navigator = () => {
             {renderDesktopNav()}
           </Box>
 
-          {user && <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open user menu">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar style={{ marginRight: '5px' }} alt={user.displayName} src={'feature'} />
-                <Typography color="secondary" style={{ textTransform: 'uppercase' }} variant='h6'>{user.displayName}</Typography>
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {userMenu.map(({ title, action }) => (
-                <MenuItem key={title} onClick={() => {
-                  action()
-                  handleCloseNavMenu()
-                }}>
-                  <Typography textAlign="center">{title}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          }
+          {user && (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open user menu">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar style={{ marginRight: '5px' }} alt={user.displayName} src="feature" />
+                  <Typography color="secondary" style={{ textTransform: 'uppercase' }} variant="h6">{user.displayName}</Typography>
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {userMenu.map(({ text, action }) => (
+                  <MenuItem
+                    key={text}
+                    onClick={() => {
+                      action();
+                      handleCloseNavMenu();
+                    }}
+                  >
+                    <Typography textAlign="center">{text}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
   );
-};
+}
 export default Navigator;
