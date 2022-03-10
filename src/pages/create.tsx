@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import { useFireStore } from '../hooks/useFirestore';
 import { useAuthContext } from '../hooks/useAuthContext';
-import DropdownAsync from '../components/DropdownAsync';
+import DropdownAsync from '../components/dropdownAsync';
 
 export default function Create() {
   const [title, setTitle] = useState('');
@@ -49,7 +49,7 @@ export default function Create() {
       setDescription('');
       setDeadline('');
     }
-  }, [getCollectionsBy, response.success, user]);
+  }, []);
 
   return (
     <Container>

@@ -6,11 +6,13 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 import { useFireStore, UserWithProps } from '../../hooks/useFirestore';
 import { TableDefinition } from './tableDefinition';
 import TableData from './tableData';
+import DrawerTask from './drawer';
 
 function AllTasks() {
   const { getCollectionsBy: allMyEmployeeTasks } = useFireStore('tasks');
   const { getCollectionsBy } = useFireStore('users');
   const [data, setData] = useState<null | TableDefinition[]>(null);
+  const [selectedTask, setSelectedTask] = useState<null | string>(null);
   const { user, authIsReady } = useAuthContext();
 
   const fetchData = async () => {
@@ -51,7 +53,8 @@ function AllTasks() {
       <Grid>
         <Typography variant="h3" style={{ textTransform: 'capitalize' }} component="div" gutterBottom>All employee&apos;s Tasks</Typography>
         <Grid item>
-          {data ? <TableData data={data} /> : <CircularProgress />}
+          {data ? <TableData onSelect={setSelectedTask} data={data} /> : <CircularProgress />}
+          <DrawerTask close={setSelectedTask} uid={selectedTask} />
         </Grid>
       </Grid>
     </Container>

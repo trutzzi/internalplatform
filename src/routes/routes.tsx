@@ -7,7 +7,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import Employee from '../pages/employee/employee';
 import MyTasks from '../pages/mytasks/myTasks';
 import AllTasks from '../pages/alltasks/alltasks';
-import { ALLLINKS } from '../components/Navigator';
+import { ALLLINKS } from '../components/navigator';
 
 const RoutesComp: FC = () => {
   const { user } = useAuthContext();

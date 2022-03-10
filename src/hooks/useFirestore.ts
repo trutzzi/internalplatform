@@ -1,6 +1,6 @@
 import { useReducer, useEffect, useState, Reducer } from 'react';
 import { projectDb } from '../firebase/config';
-import { collection, addDoc, getDocs, query, where, DocumentData, deleteDoc, doc, onSnapshot } from '@firebase/firestore';
+import { collection, addDoc, getDocs, query, where, DocumentData, deleteDoc, doc } from '@firebase/firestore';
 import useSnackBars from './useSnackbar';
 import { User } from 'firebase/auth';
 
@@ -121,12 +121,6 @@ export const useFireStore = (collectionSelect: string) => {
    */
   const getCollectionsBy = async (queryDoc: string, guid: string) => {
     const userQuery = await query(ref, where(queryDoc, '==', guid));
-    onSnapshot(userQuery, (docChange) => {
-      console.log('Change detected', docChange);
-      /**
-       * TODO: Callback function to refresh
-       */
-    });
     const querySnapshot = await getDocs(userQuery);
     const results: any[] = [];
     querySnapshot.forEach((docSnapshot) => {

@@ -1,7 +1,6 @@
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import Moment from 'react-moment';
 import DoneIcon from '@mui/icons-material/Done';
-import PendingIcon from '@mui/icons-material/Pending';
 
 export type TableDefinition = {
   title: string,
@@ -12,20 +11,19 @@ export type TableDefinition = {
 };
 
 const getNameAssigned = ({ value }: any) => (value ? value[0]?.displayName : '');
-const getCompleteStatus = ({ value }: GridRenderCellParams) => (value ? <DoneIcon /> : <PendingIcon />);
-
+const getCompleteStatus = ({ value }: GridRenderCellParams) => (value ? <DoneIcon /> : '');
 const formatDate = (data: GridRenderCellParams) => <Moment format="DD-MM-YYYY hh:mm">{data.value}</Moment>;
 
 export const columnsDefinition: GridColDef[] = [
-  { field: 'title', width: 300, headerName: 'Title' },
-  { field: 'description', width: 250, headerName: 'Description' },
+  { field: 'title', width: 200, headerName: 'Title' },
+  { field: 'description', width: 300, headerName: 'Description' },
   {
     field: 'deadline', width: 180, renderCell: formatDate, headerName: 'Deadline',
   },
   {
-    field: 'user', width: 180, headerName: 'Employee', valueFormatter: getNameAssigned,
+    field: 'user', width: 120, headerName: 'Employee', valueFormatter: getNameAssigned,
   },
   {
-    field: 'done', width: 100, headerName: 'Completed', renderCell: getCompleteStatus,
+    field: 'done', width: 80, headerName: 'Done', renderCell: getCompleteStatus,
   },
 ];

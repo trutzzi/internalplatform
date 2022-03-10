@@ -57,7 +57,7 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
         }
       })();
     });
-  }, [getCollectionBy]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>
