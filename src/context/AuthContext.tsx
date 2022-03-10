@@ -2,28 +2,15 @@ import {
   createContext, Reducer, Dispatch, useEffect, useReducer,
 } from 'react';
 import { projectAuth } from '../firebase/config';
-import { useFireStore } from '../hooks/useFirestore';
+import { useFireStore, UserWithProps } from '../hooks/useFirestore';
 
 type ContextProps = {
-  user: {
-    email: string;
-    password: string;
-    displayName: string;
-    uid: string;
-    admin: boolean;
-  } | null;
+  user: UserWithProps | null;
   authIsReady: boolean;
   dispatch: Dispatch<Action>;
 };
 
-type User = {
-  email: string;
-  displayName: string;
-  uid: string;
-  admin: boolean;
-};
-
-type Action = { type: string; payload: User | any };
+type Action = { type: string, payload: any };
 
 const initialState = {
   user: null,
@@ -32,7 +19,7 @@ const initialState = {
 };
 
 type State = {
-  user: User | any;
+  user: UserWithProps | null;
   authIsReady: boolean;
 };
 
@@ -63,17 +50,14 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
   useEffect(() => {
     projectAuth.onAuthStateChanged((user) => {
       (async () => {
-        /**
-         * Check if user belong to current db after resume session
-         */
         if (user) {
-          const isAdmin: any = await getCollectionBy('uid', user?.uid);
-          const userWithProps = { ...user, admin: isAdmin.admin };
+          const isAdmin = await getCollectionBy('uid', user?.uid);
+          const userWithProps = { ...user, admin: isAdmin?.admin, supervisorId: '' };
           dispatch({ type: 'AUTH_IS_READY', payload: userWithProps });
         }
       })();
     });
-  }, []);
+  }, [getCollectionBy]);
 
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>

@@ -7,7 +7,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import Employee from '../pages/employee/employee';
 import MyTasks from '../pages/mytasks/myTasks';
 import AllTasks from '../pages/alltasks/alltasks';
-import { PAGES } from '../components/Navigator';
+import { ALLLINKS } from '../components/Navigator';
 
 const RoutesComp: FC = () => {
   const { user } = useAuthContext();
@@ -18,27 +18,27 @@ const RoutesComp: FC = () => {
         element={user ? <MyTasks /> : <Login />}
       />
       <Route
-        path={PAGES.ALL_TASKS.href}
+        path={ALLLINKS.ALL_TASKS.href}
         element={user?.admin ? <AllTasks /> : <Navigate replace to="/" />}
       />
       <Route
-        path={PAGES.LOGIN.href}
+        path={ALLLINKS.LOGIN.href}
         element={user ? <Navigate replace to="/" /> : <Login />}
       />
       <Route
-        path={PAGES.SIGNUP.href}
+        path={ALLLINKS.SIGNUP.href}
         element={user ? <Navigate replace to="/" /> : <Signup />}
       />
       <Route
-        path={PAGES.CREATE_TASK.href}
+        path={ALLLINKS.CREATE_TASK.href}
         element={user?.admin ? <Create /> : <Navigate replace to="/" />}
       />
       <Route
-        path={PAGES.TASKS.href}
+        path={ALLLINKS.TASKS.href}
         element={user ? <MyTasks /> : <Navigate replace to="/Login" />}
       />
       <Route
-        path={PAGES.EMPLOYEE.href}
+        path={ALLLINKS.EMPLOYEE.href}
         element={user?.admin ? <Employee /> : <Navigate replace to="/Login" />}
       />
     </Routes>

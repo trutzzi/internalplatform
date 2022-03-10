@@ -1,7 +1,8 @@
-import { useReducer, useEffect, useState, Reducer } from "react";
-import { projectDb } from "../firebase/config";
+import { useReducer, useEffect, useState, Reducer } from 'react';
+import { projectDb } from '../firebase/config';
 import { collection, addDoc, getDocs, query, where, DocumentData, deleteDoc, doc, onSnapshot } from '@firebase/firestore';
-import useSnackBars from "./useSnackbar";
+import useSnackBars from './useSnackbar';
+import { User } from 'firebase/auth';
 
 const initialState = {
   document: null,
@@ -9,8 +10,15 @@ const initialState = {
   error: null,
   success: null,
 };
+export type NewUser = {
+  uid: string,
+  supervisorId: string,
+  email: string,
+  displayName: string,
+  admin: boolean
+};
 
-type Task = {
+export type Task = {
   uid: string;
   title: string;
   description: string;
@@ -19,50 +27,47 @@ type Task = {
   assigned: string;
 };
 
-export type User = {
-  uid: string;
-  supervisorId: string;
-  email: string;
-  displayName: string;
-  admin: boolean;
-};
+export interface UserWithProps extends User {
+  supervisorId?: string | null
+  admin?: boolean
+}
 
 type State = {
   isPending: boolean;
-  error: string;
-  success: boolean;
-  document: Task;
+  error: string | null;
+  success: boolean | null;
+  document: any;
 };
 
 type Action = {
   type: string;
-  payload: Task;
+  payload: any;
 };
 
-const firestoreReducer: Reducer<any, any> = (state, action) => {
+const firestoreReducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {
-    case "IS_PENDING":
+    case 'IS_PENDING':
       return {
         isPending: true,
         document: null,
         success: false,
         error: null,
       };
-    case "ADDED_DOCUMENT":
+    case 'ADDED_DOCUMENT':
       return {
         isPending: false,
         document: action.payload,
         success: true,
         error: null,
       };
-    case "DELETED_DOCUMENT":
+    case 'DELETED_DOCUMENT':
       return {
         isPending: false,
         document: action.payload,
         success: true,
         error: null,
       };
-    case "ERROR":
+    case 'ERROR':
       return {
         document: null,
         isPending: false,
@@ -97,11 +102,11 @@ export const useFireStore = (collectionSelect: string) => {
    * @returns  return collection [] of {}
    */
   const getCollectionBy = async (queryDoc: string, guid: string) => {
-    const userQuery = query(ref, where(queryDoc, "==", guid))
+    const userQuery = query(ref, where(queryDoc, '==', guid));
     const querySnapshot = await getDocs(userQuery);
-    let result;
-    querySnapshot.forEach((doc) => {
-      result = doc.data();
+    let result: DocumentData = [];
+    await querySnapshot.forEach((docSnapshot) => {
+      result = docSnapshot.data();
     });
     return result;
   };
@@ -114,74 +119,77 @@ export const useFireStore = (collectionSelect: string) => {
    * @param callback callback refresh or any function
    * @returns return collections with multipe results as  [] of {}
    */
-  const getCollectionsBy = async (queryDoc: string, guid: string, callback: Function = () => null) => {
-    const userQuery = await query(ref, where(queryDoc, "==", guid))
-    onSnapshot(userQuery, (doc) => {
-      callback(doc)
+  const getCollectionsBy = async (queryDoc: string, guid: string) => {
+    const userQuery = await query(ref, where(queryDoc, '==', guid));
+    onSnapshot(userQuery, (docChange) => {
+      console.log('Change detected', docChange);
+      /**
+       * TODO: Callback function to refresh
+       */
     });
     const querySnapshot = await getDocs(userQuery);
     const results: any[] = [];
-    querySnapshot.forEach((doc) => {
-      results.push({ ...doc.data(), id: doc.id })
+    querySnapshot.forEach((docSnapshot) => {
+      results.push({ ...docSnapshot.data(), id: docSnapshot.id });
     });
     return results;
   };
 
   const getCollection = async () => {
     const docSnap = await getDocs(ref);
-    let myArray: DocumentData = [];
-    docSnap.forEach((doc) => {
-      myArray.push(doc.data())
-    })
+    const myArray: DocumentData = [];
+    docSnap.forEach((docSnapshot) => {
+      myArray.push(docSnapshot.data());
+    });
     return myArray;
   };
 
   // add document
-  const addDocument = async (doc: Task) => {
-    dispatch({ type: "IS_PENDING" });
+  const addDocument = async (document: Task) => {
+    dispatch({ type: 'IS_PENDING', payload: null });
     try {
-      const addedDocument = await addDoc(ref, doc);
+      const addedDocument = await addDoc(ref, document);
       dispatchIfNotCancelled({
-        type: "ADDED_DOCUMENT",
+        type: 'ADDED_DOCUMENT',
         payload: addedDocument,
       });
-      addAlert({ type: "success", text: `Task "${doc.title}" was added. ` })
+      addAlert({ type: 'success', text: `Task "${document.title}" was added. ` });
     } catch (error) {
-      addAlert({ type: "error", text: "Unknow error" })
-      dispatchIfNotCancelled({ type: "ERROR", payload: error });
+      addAlert({ type: 'error', text: 'Unknow error' });
+      dispatchIfNotCancelled({ type: 'ERROR', payload: error });
     }
   };
 
 
   // add user
-  const addUser = async (user: User) => {
-    dispatch({ type: "IS_PENDING" });
+  const addUser = async (user: NewUser) => {
+    dispatch({ type: 'IS_PENDING', payload: null });
     try {
       const addedDocument = await addDoc(ref, user);
-      addAlert({ type: "success", text: "User has been created, welcome!" })
+      addAlert({ type: 'success', text: 'User has been created, welcome!' });
       dispatchIfNotCancelled({
-        type: "ADDED_DOCUMENT",
+        type: 'ADDED_DOCUMENT',
         payload: addedDocument,
       });
     } catch (error) {
-      addAlert({ type: "error", text: "Unknow error" })
-      dispatchIfNotCancelled({ type: "ERROR", payload: error });
+      addAlert({ type: 'error', text: 'Unknow error' });
+      dispatchIfNotCancelled({ type: 'ERROR', payload: error });
     }
   };
 
   // delete document
   const deleteDocument = async (id: string) => {
-    dispatch({ type: "IS_PENDING" });
+    dispatch({ type: 'IS_PENDING', payload: null });
     try {
       const deletedDocument = await deleteDoc(doc(projectDb, collectionSelect, id));
-      addAlert({ type: "success", text: "Task was deleted" })
+      addAlert({ type: 'success', text: 'Task was deleted' });
       dispatchIfNotCancelled({
-        type: "DELETED_DOCUMENT",
+        type: 'DELETED_DOCUMENT',
         payload: deletedDocument,
       });
     } catch (error) {
-      addAlert({ type: "error", text: "Unknow error" })
-      dispatchIfNotCancelled({ type: "ERROR", payload: error });
+      addAlert({ type: 'error', text: 'Unknow error' });
+      dispatchIfNotCancelled({ type: 'ERROR', payload: error });
     }
   };
 

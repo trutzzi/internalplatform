@@ -49,7 +49,7 @@ export default function Create() {
       setDescription('');
       setDeadline('');
     }
-  }, [response.success]);
+  }, [getCollectionsBy, response.success, user]);
 
   return (
     <Container>

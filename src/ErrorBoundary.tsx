@@ -5,9 +5,14 @@ type MyProps = {
   children: React.ReactNode
 };
 type MyState = {
-  error: any;
+  error: Error | null;
   errorInfo: ErrorInfo | null;
   eventId: number | null;
+};
+type Error = {
+  name: string;
+  message: string;
+  stack?: string;
 };
 
 export class ErrorBoundary extends React.Component<MyProps, MyState> {
@@ -16,7 +21,7 @@ export class ErrorBoundary extends React.Component<MyProps, MyState> {
     this.state = { error: null, errorInfo: null, eventId: null };
   }
 
-  componentDidCatch(error: any, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Catch errors in any components below and re-render with error message
     this.setState({
       error,

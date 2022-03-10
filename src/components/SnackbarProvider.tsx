@@ -5,7 +5,7 @@ import {
 
 type AlertObject = { type: 'error' | 'warning' | 'info' | 'success', text: string };
 
-export const SnackBarContext = createContext<{ addAlert: (content: AlertObject) => void }>({ addAlert: (content) => null });
+export const SnackBarContext = createContext<{ addAlert: (content: AlertObject) => void }>({ addAlert: () => null });
 
 const AUTO_DISMISS = 2000;
 

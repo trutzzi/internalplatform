@@ -9,10 +9,11 @@ import { Link } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useSignout } from '../hooks/useSignout';
 
-type UserRoleCase = 'GUEST' | 'ADMIN' | 'EMPLOYEE';
-const title = 'PLATFORM';
+type Pages = typeof ADMIN_LINKS | typeof GUEST_LINKS | typeof EMPLOYEE_LINKS;
 
-export const PAGES = {
+const TITLE = 'PLATFORM';
+
+export const ALLLINKS = {
   CREATE_TASK: {
     title: 'Create Task',
     href: 'create-task',
@@ -38,30 +39,19 @@ export const PAGES = {
     href: 'signup',
   },
 };
-
-const getPageByRole = (role: UserRoleCase) => {
-  const {
-    CREATE_TASK, ALL_TASKS, TASKS, EMPLOYEE, LOGIN, SIGNUP,
-  } = PAGES;
-  switch (role) {
-    case 'ADMIN':
-      return [CREATE_TASK, ALL_TASKS, TASKS, EMPLOYEE];
-    case 'EMPLOYEE':
-      return [TASKS];
-    case 'GUEST':
-      return [LOGIN, SIGNUP];
-  }
-};
+const ADMIN_LINKS = [ALLLINKS.CREATE_TASK, ALLLINKS.ALL_TASKS, ALLLINKS.TASKS, ALLLINKS.EMPLOYEE];
+const EMPLOYEE_LINKS = [ALLLINKS.TASKS];
+const GUEST_LINKS = [ALLLINKS.LOGIN, ALLLINKS.SIGNUP];
 
 export function Navigator() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const { user, authIsReady } = useAuthContext();
-  const [pages, setPages] = useState<any>(null);
+  const [pages, setPages] = useState<Pages>([]);
   const { logout } = useSignout();
   const userMenu = [{ text: 'Logout', action: logout }];
 
-  document.title = title;
+  document.title = TITLE;
 
   useEffect(() => {
     // Add or remove link navigation based on login logic
@@ -69,12 +59,12 @@ export function Navigator() {
     const isLoggedIn = authIsReady;
     if (isLoggedIn) {
       if (isAdmin) {
-        setPages(getPageByRole('ADMIN'));
+        setPages(ADMIN_LINKS);
       } else {
-        setPages(getPageByRole('EMPLOYEE'));
+        setPages(EMPLOYEE_LINKS);
       }
     } else {
-      setPages(getPageByRole('GUEST'));
+      setPages(GUEST_LINKS);
     }
   }, [authIsReady, user]);
 
@@ -133,7 +123,7 @@ export function Navigator() {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            {title}
+            {TITLE}
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -175,7 +165,7 @@ export function Navigator() {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            {title}
+            {TITLE}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {renderDesktopNav()}
@@ -185,7 +175,7 @@ export function Navigator() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open user menu">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar style={{ marginRight: '5px' }} alt={user.displayName} src="feature" />
+                  <Avatar style={{ marginRight: '5px' }} alt={user?.displayName || ''} src="feature" />
                   <Typography color="secondary" style={{ textTransform: 'uppercase' }} variant="h6">{user.displayName}</Typography>
                 </IconButton>
               </Tooltip>

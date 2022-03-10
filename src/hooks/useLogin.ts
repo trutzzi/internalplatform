@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
-import { projectAuth } from "../firebase/config";
-import { useAuthContext } from "./useAuthContext";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useFireStore, User } from "./useFirestore";
+import { useState, useEffect } from 'react';
+import { projectAuth } from '../firebase/config';
+import { useAuthContext } from './useAuthContext';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useFireStore } from './useFirestore';
+import { DocumentData } from '@firebase/firestore';
 
 export const useLogin = () => {
-  const { getCollectionBy } = useFireStore('users')
+  const { getCollectionBy } = useFireStore('users');
   const [isCancelled, setIsCancelled] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -18,21 +19,21 @@ export const useLogin = () => {
     // signout user
     try {
       const res = await signInWithEmailAndPassword(projectAuth, email, password);
-      
+
       // TODO: FIx this type
-      const isAdmin: any = await getCollectionBy('uid', res.user.uid);
-      
+      const isAdmin: DocumentData = await getCollectionBy('uid', res.user.uid);
+
       const userWithProps = { ...res.user, admin: isAdmin.admin };
-      dispatch({ type: "LOGIN", payload: userWithProps });
+      dispatch({ type: 'LOGIN', payload: userWithProps });
 
       //   update state
       if (!isCancelled) {
         setIsPending(false);
         setError(null);
       }
-    } catch (error: any) {
+    } catch (errorRequest) {
       if (!isCancelled) {
-        setError(error.message);
+        setError('Login error');
         setIsPending(false);
       }
     }

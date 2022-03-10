@@ -24,8 +24,7 @@ module.exports = {
         "@typescript-eslint"
     ],
     "rules": {
-        'linebreak-style': ['error', process.platform === 'win32' ? 'windows' : 'unix'],
-        "react/react-in-jsx-scope": "off"
+        "react/react-in-jsx-scope": "off",
     },
     "settings": {
         "import/extensions": [".js", ".mjs", ".jsx", ".ts", ".tsx"],

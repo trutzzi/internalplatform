@@ -2,23 +2,23 @@ import './App.css';
 import { ThemeProvider } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
 import { theme } from './theme';
-import Navigator from './components/Navigator';
-import ErrorBoundary from './ErrorBoundary';
+import NavigatorComponent from './components/Navigator';
+import ErrorHandler from './ErrorBoundary';
 import RoutesComp from './routes/routes';
 import { SnackBarProvider } from './components/SnackbarProvider';
 
 function App() {
   return (
-    <ErrorBoundary>
+    <ErrorHandler>
       <ThemeProvider theme={theme}>
         <BrowserRouter>
-          <Navigator />
+          <NavigatorComponent />
           <SnackBarProvider>
             <RoutesComp />
           </SnackBarProvider>
         </BrowserRouter>
       </ThemeProvider>
-    </ErrorBoundary>
+    </ErrorHandler>
   );
 }
 
