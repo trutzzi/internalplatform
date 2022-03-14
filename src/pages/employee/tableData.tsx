@@ -13,7 +13,6 @@ const TableData: FC<TableDataProps> = ({ data }) => (
       columns={columnsDefinition}
       pageSize={25}
       rowsPerPageOptions={[5]}
-      checkboxSelection
     />
   </div>
 );

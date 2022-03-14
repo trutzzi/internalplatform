@@ -113,7 +113,7 @@ const DrawerTask: FC<DrawerProps> = ({ uid, close }) => {
                 />
               </Grid>
               <Grid item>
-                <Button variant='contained' onClick={update} disabled={!isChanged && isLoading} >Update task</Button>
+                <Button variant='contained' onClick={update} disabled={!isChanged} >Update task</Button>
               </Grid>
             </>
           ) : <Grid item><CircularProgress /></Grid>
