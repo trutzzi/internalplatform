@@ -20,7 +20,6 @@ export const useLogin = () => {
     try {
       const res = await signInWithEmailAndPassword(projectAuth, email, password);
 
-      // TODO: FIx this type
       const isAdmin: DocumentData = await getCollectionBy('uid', res.user.uid);
 
       const userWithProps = { ...res.user, admin: isAdmin.admin };
@@ -33,7 +32,7 @@ export const useLogin = () => {
       }
     } catch (errorRequest) {
       if (!isCancelled) {
-        setError('Login error');
+        setError('Login error. Email/password wrong or to many attempts');
         setIsPending(false);
       }
     }

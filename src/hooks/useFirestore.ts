@@ -1,6 +1,6 @@
 import { useReducer, useEffect, useState, Reducer } from 'react';
 import { projectDb } from '../firebase/config';
-import { collection, addDoc, getDocs, query, where, DocumentData, deleteDoc, doc } from '@firebase/firestore';
+import { collection, addDoc, getDocs, query, where, DocumentData, deleteDoc, doc, updateDoc } from '@firebase/firestore';
 import useSnackBars from './useSnackbar';
 import { User } from 'firebase/auth';
 
@@ -54,6 +54,13 @@ const firestoreReducer: Reducer<State, Action> = (state, action) => {
         error: null,
       };
     case 'ADDED_DOCUMENT':
+      return {
+        isPending: false,
+        document: action.payload,
+        success: true,
+        error: null,
+      };
+    case 'UPDATE_DOCUMENT':
       return {
         isPending: false,
         document: action.payload,
@@ -155,6 +162,30 @@ export const useFireStore = (collectionSelect: string) => {
   };
 
 
+  // update doc
+  /**
+   * 
+   * @param uid string
+   * @param formData object to update
+   * @returns the error if any
+   */
+  const updateDocument = async (uid: string, formData: any) => {
+    try {
+      if (uid) {
+        const docRef = doc(projectDb, 'tasks', uid);
+        await updateDoc(docRef, formData);
+        dispatchIfNotCancelled({
+          type: 'UPDATE_DOCUMENT',
+          payload: formData,
+        });
+        addAlert({ type: 'success', text: `Task ${formData.title} was updated` });
+      }
+    } catch (err) {
+      addAlert({ type: 'error', text: 'Unknow error' });
+      dispatchIfNotCancelled({ type: 'ERROR', payload: err });
+    }
+  };
+
   // add user
   const addUser = async (user: NewUser) => {
     dispatch({ type: 'IS_PENDING', payload: null });
@@ -191,5 +222,5 @@ export const useFireStore = (collectionSelect: string) => {
     return () => setIsCancelled(true);
   }, []);
 
-  return { addDocument, addUser, deleteDocument, getCollectionBy, getCollection, getCollectionsBy, response };
+  return { addDocument, updateDocument, addUser, deleteDocument, getCollectionBy, getCollection, getCollectionsBy, response };
 };

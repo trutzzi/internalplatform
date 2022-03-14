@@ -22,7 +22,6 @@ function AllTasks() {
       const requestNames: Promise<any>[] = [];
       if (user) {
         //TOFIX: Callback create infinite refresh 
-        // const collectionRequest = await allMyEmployeeTasks('uid', user.uid,fetchData)
         const collectionRequest = await allMyEmployeeTasks('uid', user.uid)
           .then((results: TableDefinition[]) => {
             // add uid as id for table data required field
@@ -32,8 +31,8 @@ function AllTasks() {
             });
           });
         const allNameRequested = await Promise.all(requestNames).then(value => value);
-        const wrappedRequests2 = allNameRequested.reduce((a, b) => [...a, ...b], []);
-        const getName = (uid: string) => wrappedRequests2.filter((userFiltered: UserWithProps) => userFiltered.uid === uid);
+        const wrappedRequests = allNameRequested.reduce((a, b) => [...a, ...b], []);
+        const getName = (uid: string) => wrappedRequests.filter((userFiltered: UserWithProps) => userFiltered.uid === uid);
         const processedData = collectionRequest.map((userRequest) => ({ ...userRequest, user: getName(userRequest.assigned) }));
         setData(processedData);
       }
@@ -53,7 +52,7 @@ function AllTasks() {
       <Grid>
         <Typography variant="h3" style={{ textTransform: 'capitalize' }} component="div" gutterBottom>All employee&apos;s Tasks</Typography>
         <Grid item>
-          {data ? <TableData onSelect={setSelectedTask} data={data} /> : <CircularProgress />}
+          {data ? <TableData  onSelect={setSelectedTask} data={data} /> : <CircularProgress />}
           <DrawerTask close={setSelectedTask} uid={selectedTask} />
         </Grid>
       </Grid>

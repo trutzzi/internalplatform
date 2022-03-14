@@ -24,7 +24,7 @@ function MyTasks() {
         }
       }
     })();
-  }, [authIsReady, getCollectionsBy, user]);
+  }, [authIsReady, user]);
 
   return (
     <Container>

@@ -30,7 +30,7 @@ function Employee() {
         }
       }
     })();
-  }, [authIsReady, getCollectionsBy, user]);
+  }, [authIsReady, user]);
 
   return (
     <Container>

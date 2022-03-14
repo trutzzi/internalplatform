@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, Grid } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import { columnsDefinition, TableDefinition } from './tableDefinition';
 import { useFireStore } from '../../hooks/useFirestore';
 
@@ -51,7 +51,7 @@ const TableData: FC<TableDataProps> = ({ data, onSelect }) => {
           />
         </div>
       </Grid>
-      {selected.length ? renderSelectRow() : <p>Select a row to edit or multiple to delete or mark as completed.</p>}
+      {selected.length ? renderSelectRow() : <Typography style={{ padding: '10px' }} variant="overline" display="block" gutterBottom>Select a row to edit or multiple to delete or mark as completed.</Typography>}
     </Grid>
   );
 };

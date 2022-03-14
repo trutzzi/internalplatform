@@ -1,18 +1,25 @@
 import {
   Box, Button, Container, Grid, TextField, Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLogin } from '../hooks/useLogin';
+import useSnackBars from '../hooks/useSnackbar';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, isPending } = useLogin();
-
+  const { login, isPending, error } = useLogin();
+  const { addAlert } = useSnackBars();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     login(email, password);
   };
+
+  useEffect(() => {
+    if (error) {
+      addAlert({ type: 'error', text: error });
+    }
+  }, [addAlert, error]);
 
   return (
     <Container>

@@ -70,7 +70,7 @@ export default function Create() {
 
           <Grid item>
             <Grid item>
-              {assignedDropdown ? <DropdownAsync label="Employee assigned" handleChange={setAssigned} items={assignedDropdown} /> : <CircularProgress />}
+              {assignedDropdown ? <DropdownAsync label="Employee assigned" defaultValue={assigned} handleChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setAssigned(e.target.value)} items={assignedDropdown} /> : <CircularProgress />}
             </Grid>
           </Grid>
           <Grid item>
@@ -103,7 +103,7 @@ export default function Create() {
             />
           </Grid>
           <Grid item>
-            <Button type="submit" variant="contained">New</Button>
+            <Button type="submit" variant="contained">New task</Button>
           </Grid>
         </Grid>
       </Box>
