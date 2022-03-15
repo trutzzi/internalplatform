@@ -29,6 +29,8 @@ export default function Create() {
         deadline,
         done: false,
         assigned,
+        createdAt: new Date().toISOString(),
+        doneAt: null,
       });
     }
   };
@@ -54,7 +56,7 @@ export default function Create() {
   return (
     <Container>
       <Box component="form" onSubmit={handleSubmit}>
-        <Typography variant="h3" component="div" gutterBottom> Add task</Typography>
+        <Typography variant="h3" component="div" gutterBottom> Add new task</Typography>
 
         <Grid container direction="column" rowSpacing={2}>
           <Grid item>
@@ -76,7 +78,7 @@ export default function Create() {
           <Grid item>
             <TextareaAutosize
               style={{
-                width: 190,
+                width: 230,
                 borderRadius: 3,
                 borderColor: '#999',
                 borderWidth: 1,
@@ -97,6 +99,7 @@ export default function Create() {
           <Grid item>
             <TextField
               label="Deadline"
+              style={{ width: '260px' }}
               type="datetime-local"
               onChange={(e) => setDeadline(e.target.value)}
               required

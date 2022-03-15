@@ -6,21 +6,31 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 import { useFireStore } from '../../hooks/useFirestore';
 import { TableDefinition } from './tableDefinition';
 import TableData from './tableData';
+import { GridCellParams } from '@mui/x-data-grid';
 
 function MyTasks() {
   const { getCollectionsBy } = useFireStore('tasks');
-  const [users, setUsers] = useState<null | TableDefinition[]>(null);
+  const [data, setData] = useState<null | TableDefinition[]>(null);
   const { user, authIsReady } = useAuthContext();
+  const { updateDocument } = useFireStore('tasks');
+
+
+  async function updatetaskSelected(params: GridCellParams) {
+    console.log(params);
+    if (params.field === 'done') {
+      const formData = {
+        done: !params.value,
+      };
+      await updateDocument(params.id.toString(), formData);
+    }
+  }
 
   useEffect(() => {
     (async () => {
       if (authIsReady) {
         if (user) {
-          const collectionRequest = await getCollectionsBy('assigned', user.uid)
-            .then((results: TableDefinition[]) =>
-              // add uid as id for table data required field
-              results.map((item: TableDefinition, index) => ({ ...item, id: index })));
-          setUsers(collectionRequest);
+          const collectionRequest = await getCollectionsBy('assigned', user.uid);
+          setData(collectionRequest as TableDefinition[]);
         }
       }
     })();
@@ -31,7 +41,7 @@ function MyTasks() {
       <Grid>
         <Typography variant="h3" style={{ textTransform: 'capitalize' }} component="div" gutterBottom>My tasks</Typography>
         <Grid item>
-          {users ? <TableData data={users} /> : <CircularProgress />}
+          {data ? <TableData currentlySelected={updatetaskSelected} data={data} /> : <CircularProgress />}
         </Grid>
       </Grid>
     </Container>

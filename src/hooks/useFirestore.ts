@@ -15,7 +15,8 @@ export type NewUser = {
   supervisorId: string,
   email: string,
   displayName: string,
-  admin: boolean
+  admin: boolean,
+  createdAt: string | Date,
 };
 
 export type Task = {
@@ -25,6 +26,8 @@ export type Task = {
   deadline: string;
   done: boolean;
   assigned: string;
+  createdAt: Date | string;
+  doneAt: Date | string | null;
 };
 
 export interface UserWithProps extends User {
@@ -95,7 +98,7 @@ export const useFireStore = (collectionSelect: string) => {
   const ref = collection(projectDb, collectionSelect);
 
   // only dispatch if not cancelled
-  const dispatchIfNotCancelled = (action: any) => {
+  const dispatchIfNotCancelled = (action: Action) => {
     if (!isCancelled) {
       dispatch(action);
     }
@@ -129,7 +132,7 @@ export const useFireStore = (collectionSelect: string) => {
   const getCollectionsBy = async (queryDoc: string, guid: string) => {
     const userQuery = await query(ref, where(queryDoc, '==', guid));
     const querySnapshot = await getDocs(userQuery);
-    const results: any[] = [];
+    const results: DocumentData[] = [];
     querySnapshot.forEach((docSnapshot) => {
       results.push({ ...docSnapshot.data(), id: docSnapshot.id });
     });
@@ -169,10 +172,16 @@ export const useFireStore = (collectionSelect: string) => {
    * @param formData object to update
    * @returns the error if any
    */
-  const updateDocument = async (uid: string, formData: any) => {
+  const updateDocument = async (uid: string, formData: DocumentData) => {
     try {
       if (uid) {
         const docRef = doc(projectDb, 'tasks', uid);
+        // If done checked, send date when was ready
+        if (formData.done) {
+          formData.doneAt = new Date().toISOString();
+        } else {
+          formData.doneAt = null;
+        }
         await updateDoc(docRef, formData);
         dispatchIfNotCancelled({
           type: 'UPDATE_DOCUMENT',

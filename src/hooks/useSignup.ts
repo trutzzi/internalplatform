@@ -40,6 +40,7 @@ export const useSignup = () => {
         email,
         displayName,
         admin: false,
+        createdAt: new Date().toISOString(),
       });
 
       //   dispatch login action
@@ -50,9 +51,10 @@ export const useSignup = () => {
         setIsPending(false);
         setError(null);
       }
-    } catch (errorRequest) {
+    } catch (e) {
+      const result = (e as Error).message;
       //   Show error
-      addAlert({ type: 'error', text: String(error) });
+      addAlert({ type: 'error', text: result });
       if (!isCancelled) {
         setIsPending(false);
         setError(null);

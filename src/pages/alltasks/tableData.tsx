@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridSelectionModel } from '@mui/x-data-grid';
 import { Button, Grid, Typography } from '@mui/material';
 import { columnsDefinition, TableDefinition } from './tableDefinition';
 import { useFireStore } from '../../hooks/useFirestore';
@@ -10,17 +10,14 @@ type TableDataProps = {
 };
 const TableData: FC<TableDataProps> = ({ data, onSelect }) => {
   const { deleteDocument } = useFireStore('tasks');
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState<any>([]);
 
-  const handleChange = (state: any) => {
-    /**
-     * Define a function to handle the update/delete by checkbox
-     */
-    setSelected(state);
+  const handleChange = (selectionModel: GridSelectionModel) => {
+    setSelected(selectionModel);
   };
 
   const deleteTasks = async () => {
-    selected.map((task) => deleteDocument(task));
+    selected.map((task: string) => deleteDocument(task));
   };
   const handleEditMode = () => {
     if (selected.length === 1) {
@@ -31,7 +28,6 @@ const TableData: FC<TableDataProps> = ({ data, onSelect }) => {
   const renderSelectRow = () => (
     <Grid item style={{ marginTop: '25px', marginBottom: '25px' }}>
       <Button onClick={deleteTasks} variant="contained">Delete</Button>
-      <Button onClick={() => alert('This Feature will be developed.')} color="secondary" variant="contained" style={{ marginLeft: '15px' }}>Mark as completed</Button>
       {selected.length === 1 && <Button variant='contained' style={{ marginLeft: '15px' }} color='secondary' onClick={handleEditMode} >Edit</Button>}
     </Grid >
 
@@ -40,19 +36,20 @@ const TableData: FC<TableDataProps> = ({ data, onSelect }) => {
   return (
     <Grid container direction="column" spacing="10px">
       <Grid item>
-        <div style={{ height: 600, width: '100%' }}>
+        <div style={{ width: '100%' }}>
           <DataGrid
             rows={data}
             columns={columnsDefinition}
             pageSize={25}
+            autoHeight
             rowsPerPageOptions={[5]}
             checkboxSelection
             onSelectionModelChange={handleChange}
           />
         </div>
       </Grid>
-      {selected.length ? renderSelectRow() : <Typography style={{ padding: '10px' }} variant="overline" display="block" gutterBottom>Select a row to edit or multiple to delete or mark as completed.</Typography>}
-    </Grid>
+      {selected.length ? renderSelectRow() : <Typography style={{ padding: '10px' }} variant="overline" display="block" gutterBottom>Select a row to edit or multiple to delete.</Typography>}
+    </Grid >
   );
 };
 export default TableData;

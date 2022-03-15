@@ -4,14 +4,17 @@ import { columnsDefinition, TableDefinition } from './tableDefinition';
 
 type TableDataProps = {
   data: TableDefinition[];
+  currentlySelected: any
 };
 
-const TableData: FC<TableDataProps> = ({ data }) => (
-  <div style={{ height: 600, width: '100%' }}>
+const TableData: FC<TableDataProps> = ({ data, currentlySelected }) => (
+  <div style={{ width: '100%' }}>
     <DataGrid
       rows={data}
-      columns={columnsDefinition}
+      columns={(columnsDefinition)}
       pageSize={25}
+      autoHeight
+      onCellClick={currentlySelected}
       rowsPerPageOptions={[5]}
       checkboxSelection={false}
     />

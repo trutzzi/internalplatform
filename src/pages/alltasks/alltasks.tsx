@@ -7,12 +7,13 @@ import { useFireStore, UserWithProps } from '../../hooks/useFirestore';
 import { TableDefinition } from './tableDefinition';
 import TableData from './tableData';
 import DrawerTask from './drawer';
+import { GridRowId } from '@mui/x-data-grid';
 
 function AllTasks() {
   const { getCollectionsBy: allMyEmployeeTasks } = useFireStore('tasks');
   const { getCollectionsBy } = useFireStore('users');
-  const [data, setData] = useState<null | TableDefinition[]>(null);
-  const [selectedTask, setSelectedTask] = useState<null | string>(null);
+  const [data, setData] = useState<any[] | null>(null);
+  const [selectedTask, setSelectedTask] = useState<string | null>(null);
   const { user, authIsReady } = useAuthContext();
 
   const fetchData = async () => {
@@ -23,9 +24,9 @@ function AllTasks() {
       if (user) {
         //TOFIX: Callback create infinite refresh 
         const collectionRequest = await allMyEmployeeTasks('uid', user.uid)
-          .then((results: TableDefinition[]) => {
+          .then((results) => {
             // add uid as id for table data required field
-            return results.map((item: TableDefinition) => {
+            return results.map((item) => {
               requestNames.push(getCollectionsBy('uid', item.assigned));
               return item;
             });
@@ -52,7 +53,7 @@ function AllTasks() {
       <Grid>
         <Typography variant="h3" style={{ textTransform: 'capitalize' }} component="div" gutterBottom>All employee&apos;s Tasks</Typography>
         <Grid item>
-          {data ? <TableData  onSelect={setSelectedTask} data={data} /> : <CircularProgress />}
+          {data ? <TableData onSelect={setSelectedTask} data={data} /> : <CircularProgress />}
           <DrawerTask close={setSelectedTask} uid={selectedTask} />
         </Grid>
       </Grid>

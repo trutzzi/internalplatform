@@ -12,7 +12,7 @@ export type TableDefinition = {
 
 const getNameAssigned = ({ value }: any) => (value ? value[0]?.displayName : '');
 const getCompleteStatus = ({ value }: GridRenderCellParams) => (value ? <DoneIcon /> : '');
-const formatDate = (data: GridRenderCellParams) => <Moment format="DD-MM-YYYY hh:mm">{data.value}</Moment>;
+const formatDate = (data: GridRenderCellParams) => data.value ? <Moment format="DD-MM-YYYY hh:mm">{data.value}</Moment> : '';
 
 export const columnsDefinition: GridColDef[] = [
   { field: 'title', width: 200, headerName: 'Title' },
@@ -25,5 +25,8 @@ export const columnsDefinition: GridColDef[] = [
   },
   {
     field: 'done', width: 80, headerName: 'Done', renderCell: getCompleteStatus,
+  },
+  {
+    field: 'doneAt', width: 140, headerName: 'Done at', renderCell: formatDate,
   },
 ];

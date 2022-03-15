@@ -1,3 +1,4 @@
+import { DocumentData } from '@firebase/firestore';
 import {
   CircularProgress, Container, Grid, Typography,
 } from '@mui/material';
@@ -5,17 +6,10 @@ import { useEffect, useState } from 'react';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { useFireStore } from '../../hooks/useFirestore';
 import TableData from './tableData';
-import { TableDefinition } from './tableDefinition';
-
-type UserResponse = {
-  displayName: string,
-  email: string,
-  uid: string
-};
 
 function Employee() {
   const { getCollectionsBy } = useFireStore('users');
-  const [users, setUsers] = useState<null | TableDefinition[]>(null);
+  const [users, setUsers] = useState<null | any[]>(null);
   const { user, authIsReady } = useAuthContext();
 
   useEffect(() => {
@@ -23,9 +17,9 @@ function Employee() {
       if (authIsReady) {
         if (user) {
           const collectionRequest = await getCollectionsBy('supervisorId', user.uid)
-            .then((results: UserResponse[]) =>
+            .then((results: DocumentData[]) =>
               // add uid as id for table data required field
-              results.map((item: UserResponse) => ({ ...item, id: item.uid })));
+              results.map((item: DocumentData) => ({ ...item, id: item.uid })));
           setUsers(collectionRequest);
         }
       }
@@ -37,7 +31,7 @@ function Employee() {
       <Grid>
         <Typography variant="h3" style={{ textTransform: 'capitalize' }} component="div" gutterBottom>
           {user?.displayName}
-          &apos;s Employees
+          &apos;s Employee
         </Typography>
         <Grid item>
           {users ? <TableData data={users} /> : <CircularProgress />}

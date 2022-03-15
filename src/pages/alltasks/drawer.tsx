@@ -13,10 +13,6 @@ type DrawerProps = {
   uid: string | null,
   close: React.Dispatch<React.SetStateAction<string | null>>,
 };
-type Task = {
-  title: string, description: string, assigned: string, done: boolean, deadline: string
-};
-
 
 const DrawerTask: FC<DrawerProps> = ({ uid, close }) => {
   const { user } = useAuthContext();
@@ -64,7 +60,9 @@ const DrawerTask: FC<DrawerProps> = ({ uid, close }) => {
   const update = async () => {
     //Update document
     if (uid) {
-      await updateDocument(uid, formData);
+      if (formData) {
+        await updateDocument(uid, formData);
+      }
       setIsloading(true);
       close(null);
     }

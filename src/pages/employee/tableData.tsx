@@ -7,11 +7,12 @@ type TableDataProps = {
 };
 
 const TableData: FC<TableDataProps> = ({ data }) => (
-  <div style={{ height: 600, width: '100%' }}>
+  <div style={{ width: '100%' }}>
     <DataGrid
       rows={data}
       columns={columnsDefinition}
       pageSize={25}
+      autoHeight
       rowsPerPageOptions={[5]}
     />
   </div>

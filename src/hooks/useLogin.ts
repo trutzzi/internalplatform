@@ -4,6 +4,7 @@ import { useAuthContext } from './useAuthContext';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useFireStore } from './useFirestore';
 import { DocumentData } from '@firebase/firestore';
+import useSnackBars from './useSnackbar';
 
 export const useLogin = () => {
   const { getCollectionBy } = useFireStore('users');
@@ -11,6 +12,7 @@ export const useLogin = () => {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { dispatch } = useAuthContext();
+  const { addAlert } = useSnackBars();
 
   const login = async (email: string, password: string) => {
     setError(null);
@@ -30,10 +32,13 @@ export const useLogin = () => {
         setIsPending(false);
         setError(null);
       }
-    } catch (errorRequest) {
+    } catch (e) {
+      const result = (e as Error).message;
+      //   Show error
+      addAlert({ type: 'error', text: result });
       if (!isCancelled) {
-        setError('Login error. Email/password wrong or to many attempts');
         setIsPending(false);
+        setError(null);
       }
     }
   };
