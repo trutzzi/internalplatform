@@ -1,9 +1,7 @@
 import { FC } from 'react';
-import {
-  InputLabel, Select,  MenuItem,
-} from '@mui/material';
+import { InputLabel, Select, MenuItem } from '@mui/material';
 
-type Option = { label: string, value: string | number };
+type Option = { label: string; value: string | number };
 
 type DropdownAsyncProps = {
   items: Option[];
@@ -13,8 +11,19 @@ type DropdownAsyncProps = {
   name?: string;
 };
 
-const DropdownAsync: FC<DropdownAsyncProps> = ({ items, handleChange, label, defaultValue, name }) => {
-  const renderItems = () => items.map((item, index) => <MenuItem key={index} value={item.value}>{item.label}</MenuItem>);
+const DropdownAsync: FC<DropdownAsyncProps> = ({
+  items,
+  handleChange,
+  label,
+  defaultValue,
+  name
+}) => {
+  const renderItems = () =>
+    items.map((item, index) => (
+      <MenuItem key={index} value={item.value}>
+        {item.label}
+      </MenuItem>
+    ));
   return (
     <>
       <InputLabel>{label}</InputLabel>
@@ -22,7 +31,7 @@ const DropdownAsync: FC<DropdownAsyncProps> = ({ items, handleChange, label, def
         placeholder="Select value"
         label={label}
         style={{
-          width: '220px',
+          width: '220px'
         }}
         required
         name={name}

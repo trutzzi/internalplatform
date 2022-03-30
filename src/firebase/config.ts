@@ -9,7 +9,7 @@ const firebaseConfig = {
   projectId: 'cpdplatform-2035e',
   storageBucket: 'cpdplatform-2035e.appspot.com',
   messagingSenderId: '1014432540718',
-  appId: '1:1014432540718:web:cca04e47c943f972f197bf',
+  appId: '1:1014432540718:web:cca04e47c943f972f197bf'
 };
 
 // init firebase

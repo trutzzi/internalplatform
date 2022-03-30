@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import {
-  Box, Button, Container, Grid, TextField, Typography,
-} from '@mui/material';
+import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
 import { useSignup } from '../hooks/useSignup';
 
 export default function Signup() {
@@ -18,7 +16,9 @@ export default function Signup() {
   return (
     <Container>
       <Box onSubmit={handleSubmit} component="form">
-        <Typography variant="h3" component="div" gutterBottom>Signup</Typography>
+        <Typography variant="h3" component="div" gutterBottom>
+          Signup
+        </Typography>
         <Grid container direction="column" rowSpacing={2}>
           <Grid item>
             <TextField
@@ -49,7 +49,9 @@ export default function Signup() {
               value={displayName}
             />
             <Grid item>
-              <Button type="submit" disabled={isPending} variant="contained">Signup</Button>
+              <Button type="submit" disabled={isPending} variant="contained">
+                Signup
+              </Button>
             </Grid>
           </Grid>
           {error && <p>{error}</p>}

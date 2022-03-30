@@ -1,6 +1,4 @@
-import {
-  Box, Button, Container, Grid, TextField, Typography,
-} from '@mui/material';
+import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useLogin } from '../hooks/useLogin';
 import useSnackBars from '../hooks/useSnackbar';
@@ -25,7 +23,9 @@ export default function Login() {
     <Container>
       <Grid>
         <Box component="form" onSubmit={handleSubmit}>
-          <Typography variant="h3" component="div" gutterBottom>Login</Typography>
+          <Typography variant="h3" component="div" gutterBottom>
+            Login
+          </Typography>
           <Grid item>
             <TextField
               required
@@ -46,7 +46,9 @@ export default function Login() {
               autoComplete="on"
             />
           </Grid>
-          <Button type="submit" disabled={isPending} variant="contained">Login</Button>
+          <Button type="submit" disabled={isPending} variant="contained">
+            Login
+          </Button>
         </Box>
       </Grid>
     </Container>

@@ -1,6 +1,16 @@
 import { useReducer, useEffect, useState, Reducer } from 'react';
 import { projectDb } from '../firebase/config';
-import { collection, addDoc, getDocs, query, where, DocumentData, deleteDoc, doc, updateDoc } from '@firebase/firestore';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  DocumentData,
+  deleteDoc,
+  doc,
+  updateDoc
+} from '@firebase/firestore';
 import useSnackBars from './useSnackbar';
 import { User } from 'firebase/auth';
 
@@ -8,15 +18,15 @@ const initialState = {
   document: null,
   isPending: false,
   error: null,
-  success: null,
+  success: null
 };
 export type NewUser = {
-  uid: string,
-  supervisorId: string,
-  email: string,
-  displayName: string,
-  admin: boolean,
-  createdAt: string | Date,
+  uid: string;
+  supervisorId: string;
+  email: string;
+  displayName: string;
+  admin: boolean;
+  createdAt: string | Date;
 };
 
 export type Task = {
@@ -31,8 +41,8 @@ export type Task = {
 };
 
 export interface UserWithProps extends User {
-  supervisorId?: string | null
-  admin?: boolean
+  supervisorId?: string | null;
+  admin?: boolean;
 }
 
 type State = {
@@ -54,35 +64,35 @@ const firestoreReducer: Reducer<State, Action> = (state, action) => {
         isPending: true,
         document: null,
         success: false,
-        error: null,
+        error: null
       };
     case 'ADDED_DOCUMENT':
       return {
         isPending: false,
         document: action.payload,
         success: true,
-        error: null,
+        error: null
       };
     case 'UPDATE_DOCUMENT':
       return {
         isPending: false,
         document: action.payload,
         success: true,
-        error: null,
+        error: null
       };
     case 'DELETED_DOCUMENT':
       return {
         isPending: false,
         document: action.payload,
         success: true,
-        error: null,
+        error: null
       };
     case 'ERROR':
       return {
         document: null,
         isPending: false,
         success: false,
-        error: action.payload,
+        error: action.payload
       };
     default:
       return state;
@@ -106,7 +116,7 @@ export const useFireStore = (collectionSelect: string) => {
 
   // get collection by specific field return one
   /**
-   * 
+   *
    * @param queryDoc Document name
    * @param guid Search in query
    * @returns  return collection [] of {}
@@ -123,7 +133,7 @@ export const useFireStore = (collectionSelect: string) => {
 
   // Get collection by specific field return all
   /**
-   * 
+   *
    * @param queryDoc Document name
    * @param guid guid to query
    * @param callback callback refresh or any function
@@ -155,19 +165,21 @@ export const useFireStore = (collectionSelect: string) => {
       const addedDocument = await addDoc(ref, document);
       dispatchIfNotCancelled({
         type: 'ADDED_DOCUMENT',
-        payload: addedDocument,
+        payload: addedDocument
       });
-      addAlert({ type: 'success', text: `Task "${document.title}" was added. ` });
+      addAlert({
+        type: 'success',
+        text: `Task "${document.title}" was added. `
+      });
     } catch (error) {
       addAlert({ type: 'error', text: 'Unknow error' });
       dispatchIfNotCancelled({ type: 'ERROR', payload: error });
     }
   };
 
-
   // update doc
   /**
-   * 
+   *
    * @param uid string
    * @param formData object to update
    * @returns the error if any
@@ -185,9 +197,12 @@ export const useFireStore = (collectionSelect: string) => {
         await updateDoc(docRef, formData);
         dispatchIfNotCancelled({
           type: 'UPDATE_DOCUMENT',
-          payload: formData,
+          payload: formData
         });
-        addAlert({ type: 'success', text: `Task ${formData.title} was updated` });
+        addAlert({
+          type: 'success',
+          text: `Task ${formData.title} was updated`
+        });
       }
     } catch (err) {
       addAlert({ type: 'error', text: 'Unknow error' });
@@ -203,7 +218,7 @@ export const useFireStore = (collectionSelect: string) => {
       addAlert({ type: 'success', text: 'User has been created, welcome!' });
       dispatchIfNotCancelled({
         type: 'ADDED_DOCUMENT',
-        payload: addedDocument,
+        payload: addedDocument
       });
     } catch (error) {
       addAlert({ type: 'error', text: 'Unknow error' });
@@ -219,7 +234,7 @@ export const useFireStore = (collectionSelect: string) => {
       addAlert({ type: 'success', text: 'Task was deleted' });
       dispatchIfNotCancelled({
         type: 'DELETED_DOCUMENT',
-        payload: deletedDocument,
+        payload: deletedDocument
       });
     } catch (error) {
       addAlert({ type: 'error', text: 'Unknow error' });
@@ -231,5 +246,14 @@ export const useFireStore = (collectionSelect: string) => {
     return () => setIsCancelled(true);
   }, []);
 
-  return { addDocument, updateDocument, addUser, deleteDocument, getCollectionBy, getCollection, getCollectionsBy, response };
+  return {
+    addDocument,
+    updateDocument,
+    addUser,
+    deleteDocument,
+    getCollectionBy,
+    getCollection,
+    getCollectionsBy,
+    response
+  };
 };

@@ -1,7 +1,5 @@
 import { DocumentData } from '@firebase/firestore';
-import {
-  CircularProgress, Container, Grid, Typography,
-} from '@mui/material';
+import { CircularProgress, Container, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { useFireStore } from '../../hooks/useFirestore';
@@ -16,10 +14,11 @@ function Employee() {
     (async () => {
       if (authIsReady) {
         if (user) {
-          const collectionRequest = await getCollectionsBy('supervisorId', user.uid)
-            .then((results: DocumentData[]) =>
+          const collectionRequest = await getCollectionsBy('supervisorId', user.uid).then(
+            (results: DocumentData[]) =>
               // add uid as id for table data required field
-              results.map((item: DocumentData) => ({ ...item, id: item.uid })));
+              results.map((item: DocumentData) => ({ ...item, id: item.uid }))
+          );
           setUsers(collectionRequest);
         }
       }
@@ -29,13 +28,16 @@ function Employee() {
   return (
     <Container>
       <Grid>
-        <Typography variant="h3" style={{ textTransform: 'capitalize' }} component="div" gutterBottom>
+        <Typography
+          variant="h3"
+          style={{ textTransform: 'capitalize' }}
+          component="div"
+          gutterBottom
+        >
           {user?.displayName}
           &apos;s Employee
         </Typography>
-        <Grid item>
-          {users ? <TableData data={users} /> : <CircularProgress />}
-        </Grid>
+        <Grid item>{users ? <TableData data={users} /> : <CircularProgress />}</Grid>
       </Grid>
     </Container>
   );

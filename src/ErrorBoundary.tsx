@@ -2,7 +2,7 @@ import { Grid } from '@mui/material';
 import React, { ErrorInfo } from 'react';
 
 type MyProps = {
-  children: React.ReactNode
+  children: React.ReactNode;
 };
 type MyState = {
   error: Error | null;
@@ -25,7 +25,7 @@ export class ErrorBoundary extends React.Component<MyProps, MyState> {
     // Catch errors in any components below and re-render with error message
     this.setState({
       error,
-      errorInfo,
+      errorInfo
     });
 
     // You can also log error messages to an error reporting service here
@@ -41,11 +41,8 @@ export class ErrorBoundary extends React.Component<MyProps, MyState> {
             <p>
               This is not your fault!
               <br />
-              Write an email to
-              {' '}
-              <a href="mailto: trutzzi@yahoo.ro">trutzzi@yahoo.ro</a>
-              {' '}
-              and hope for the best.
+              Write an email to <a href="mailto: trutzzi@yahoo.ro">trutzzi@yahoo.ro</a> and hope for
+              the best.
             </p>
             <details style={{ whiteSpace: 'pre-wrap', color: 'red' }}>
               <summary>Nerd info</summary>

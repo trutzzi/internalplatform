@@ -13,18 +13,12 @@ const RoutesComp: FC = () => {
   const { user } = useAuthContext();
   return (
     <Routes>
-      <Route
-        path="/"
-        element={user ? <MyTasks /> : <Login />}
-      />
+      <Route path="/" element={user ? <MyTasks /> : <Login />} />
       <Route
         path={ALLLINKS.ALL_TASKS.href}
         element={user?.admin ? <AllTasks /> : <Navigate replace to="/" />}
       />
-      <Route
-        path={ALLLINKS.LOGIN.href}
-        element={user ? <Navigate replace to="/" /> : <Login />}
-      />
+      <Route path={ALLLINKS.LOGIN.href} element={user ? <Navigate replace to="/" /> : <Login />} />
       <Route
         path={ALLLINKS.SIGNUP.href}
         element={user ? <Navigate replace to="/" /> : <Signup />}

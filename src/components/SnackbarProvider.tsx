@@ -1,11 +1,14 @@
 import { Alert, Snackbar } from '@mui/material';
-import {
-  createContext, ReactNode, useCallback, useEffect, useMemo, useState,
-} from 'react';
+import { createContext, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 
-type AlertObject = { type: 'error' | 'warning' | 'info' | 'success', text: string };
+type AlertObject = {
+  type: 'error' | 'warning' | 'info' | 'success';
+  text: string;
+};
 
-export const SnackBarContext = createContext<{ addAlert: (content: AlertObject) => void }>({ addAlert: () => null });
+export const SnackBarContext = createContext<{
+  addAlert: (content: AlertObject) => void;
+}>({ addAlert: () => null });
 
 const AUTO_DISMISS = 2000;
 
@@ -16,7 +19,10 @@ export function SnackBarProvider({ children }: { children: ReactNode }) {
   const activeAlertIds = alerts.join(',');
   useEffect(() => {
     if (activeAlertIds.length > 0) {
-      const timer = setTimeout(() => setAlerts((alert) => alert.slice(0, alert.length - 1)), AUTO_DISMISS);
+      const timer = setTimeout(
+        () => setAlerts((alert) => alert.slice(0, alert.length - 1)),
+        AUTO_DISMISS
+      );
       return () => clearTimeout(timer);
     }
   }, [activeAlertIds]);

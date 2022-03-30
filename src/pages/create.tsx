@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Box } from '@mui/system';
 import {
-  Button, Grid, TextField, Typography, TextareaAutosize, Container, CircularProgress,
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  TextareaAutosize,
+  Container,
+  CircularProgress
 } from '@mui/material';
 import { useFireStore } from '../hooks/useFirestore';
 import { useAuthContext } from '../hooks/useAuthContext';
@@ -12,7 +18,9 @@ export default function Create() {
   const [description, setDescription] = useState('');
   const [deadline, setDeadline] = useState('');
   const [assigned, setAssigned] = useState('');
-  const [assignedDropdown, setAssignedDropdown] = useState<{ label: string, value: string | number }[] | null>(null);
+  const [assignedDropdown, setAssignedDropdown] = useState<
+    { label: string; value: string | number }[] | null
+  >(null);
 
   const { addDocument, response } = useFireStore('tasks');
   const { getCollectionsBy } = useFireStore('users');
@@ -30,21 +38,22 @@ export default function Create() {
         done: false,
         assigned,
         createdAt: new Date().toISOString(),
-        doneAt: null,
+        doneAt: null
       });
     }
   };
 
   useEffect(() => {
-    (
-      async () => {
-        if (user) {
-          const optionsUsers = await getCollectionsBy('supervisorId', user.uid);
-          const options = optionsUsers.map((option) => ({ label: option.displayName, value: option.uid }));
-          setAssignedDropdown(options);
-        }
+    (async () => {
+      if (user) {
+        const optionsUsers = await getCollectionsBy('supervisorId', user.uid);
+        const options = optionsUsers.map((option) => ({
+          label: option.displayName,
+          value: option.uid
+        }));
+        setAssignedDropdown(options);
       }
-    )();
+    })();
 
     if (response.success) {
       setTitle('');
@@ -56,7 +65,10 @@ export default function Create() {
   return (
     <Container>
       <Box component="form" onSubmit={handleSubmit}>
-        <Typography variant="h3" component="div" gutterBottom> Add new task</Typography>
+        <Typography variant="h3" component="div" gutterBottom>
+          {' '}
+          Add new task
+        </Typography>
 
         <Grid container direction="column" rowSpacing={2}>
           <Grid item>
@@ -72,7 +84,18 @@ export default function Create() {
 
           <Grid item>
             <Grid item>
-              {assignedDropdown ? <DropdownAsync label="Employee assigned" defaultValue={assigned} handleChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setAssigned(e.target.value)} items={assignedDropdown} /> : <CircularProgress />}
+              {assignedDropdown ? (
+                <DropdownAsync
+                  label="Employee assigned"
+                  defaultValue={assigned}
+                  handleChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
+                    setAssigned(e.target.value)
+                  }
+                  items={assignedDropdown}
+                />
+              ) : (
+                <CircularProgress />
+              )}
             </Grid>
           </Grid>
           <Grid item>
@@ -83,7 +106,7 @@ export default function Create() {
                 borderColor: '#999',
                 borderWidth: 1,
                 height: 80,
-                padding: 15,
+                padding: 15
               }}
               placeholder="Description"
               onChange={(e) => setDescription(e.target.value)}
@@ -92,9 +115,7 @@ export default function Create() {
               minRows={1}
               required
             />
-            <div>
-              {description && (`${description.length}/ 190 chars description`)}
-            </div>
+            <div>{description && `${description.length}/ 190 chars description`}</div>
           </Grid>
           <Grid item>
             <TextField
@@ -106,7 +127,9 @@ export default function Create() {
             />
           </Grid>
           <Grid item>
-            <Button type="submit" variant="contained">New task</Button>
+            <Button type="submit" variant="contained">
+              New task
+            </Button>
           </Grid>
         </Grid>
       </Box>

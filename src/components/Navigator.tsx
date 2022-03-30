@@ -2,7 +2,15 @@ import React, { useEffect, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import {
-  AppBar, Box, Toolbar, Menu, Container, Avatar, Button, Tooltip, MenuItem,
+  AppBar,
+  Box,
+  Toolbar,
+  Menu,
+  Container,
+  Avatar,
+  Button,
+  Tooltip,
+  MenuItem
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
@@ -16,28 +24,28 @@ const TITLE = 'PLATFORM';
 export const ALLLINKS = {
   CREATE_TASK: {
     title: 'Create Task',
-    href: 'create-task',
+    href: 'create-task'
   },
   ALL_TASKS: {
     title: 'All tasks',
-    href: 'all-tasks',
+    href: 'all-tasks'
   },
   TASKS: {
     title: 'My Tasks',
-    href: 'my-tasks',
+    href: 'my-tasks'
   },
   EMPLOYEE: {
     title: 'My Employee',
-    href: 'my-employee',
+    href: 'my-employee'
   },
   LOGIN: {
     title: 'Login',
-    href: 'signin',
+    href: 'signin'
   },
   SIGNUP: {
     title: 'Signup',
-    href: 'signup',
-  },
+    href: 'signup'
+  }
 };
 const ADMIN_LINKS = [ALLLINKS.CREATE_TASK, ALLLINKS.ALL_TASKS, ALLLINKS.TASKS, ALLLINKS.EMPLOYEE];
 const EMPLOYEE_LINKS = [ALLLINKS.TASKS];
@@ -90,7 +98,7 @@ export function Navigator() {
           <MenuItem key={page} onClick={handleCloseNavMenu}>
             <Typography textAlign="center">{pages[page].title}</Typography>
           </MenuItem>
-        </Link>,
+        </Link>
       );
     }
     return links;
@@ -99,16 +107,13 @@ export function Navigator() {
   const renderDesktopNav = () => {
     const links = [];
     for (const page in pages) {
-      links.push(<Link style={{ textDecoration: 'none' }} key={page} to={`/${pages[page].href}`}>
-        <Button
-          variant="text"
-          color="secondary"
-          key={page}
-          onClick={handleCloseNavMenu}
-        >
-          {pages[page].title}
-        </Button>
-      </Link>);
+      links.push(
+        <Link style={{ textDecoration: 'none' }} key={page} to={`/${pages[page].href}`}>
+          <Button variant="text" color="secondary" key={page} onClick={handleCloseNavMenu}>
+            {pages[page].title}
+          </Button>
+        </Link>
+      );
     }
     return links;
   };
@@ -142,17 +147,17 @@ export function Navigator() {
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: 'bottom',
-                horizontal: 'left',
+                horizontal: 'left'
               }}
               keepMounted
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'left',
+                horizontal: 'left'
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: 'block', md: 'none' }
               }}
             >
               {renderMobileNav()}
@@ -167,16 +172,20 @@ export function Navigator() {
           >
             {TITLE}
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {renderDesktopNav()}
-          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>{renderDesktopNav()}</Box>
 
           {user && (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open user menu">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar style={{ marginRight: '5px' }} alt={user?.displayName || ''} src="feature" />
-                  <Typography color="secondary" style={{ textTransform: 'uppercase' }} variant="h6">{user.displayName}</Typography>
+                  <Avatar
+                    style={{ marginRight: '5px' }}
+                    alt={user?.displayName || ''}
+                    src="feature"
+                  />
+                  <Typography color="secondary" style={{ textTransform: 'uppercase' }} variant="h6">
+                    {user.displayName}
+                  </Typography>
                 </IconButton>
               </Tooltip>
               <Menu
@@ -185,12 +194,12 @@ export function Navigator() {
                 anchorEl={anchorElUser}
                 anchorOrigin={{
                   vertical: 'top',
-                  horizontal: 'right',
+                  horizontal: 'right'
                 }}
                 keepMounted
                 transformOrigin={{
                   vertical: 'top',
-                  horizontal: 'right',
+                  horizontal: 'right'
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}

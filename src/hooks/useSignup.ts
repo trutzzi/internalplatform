@@ -13,12 +13,7 @@ export const useSignup = () => {
   const { addUser } = useFireStore('users');
   const { addAlert } = useSnackBars();
 
-
-  const signup = async (
-    email: string,
-    password: string,
-    displayName: string,
-  ) => {
+  const signup = async (email: string, password: string, displayName: string) => {
     setError(null);
     setIsPending(true);
 
@@ -40,7 +35,7 @@ export const useSignup = () => {
         email,
         displayName,
         admin: false,
-        createdAt: new Date().toISOString(),
+        createdAt: new Date().toISOString()
       });
 
       //   dispatch login action

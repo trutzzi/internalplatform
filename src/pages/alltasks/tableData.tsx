@@ -6,7 +6,7 @@ import { useFireStore } from '../../hooks/useFirestore';
 
 type TableDataProps = {
   data: TableDefinition[];
-  onSelect: React.Dispatch<React.SetStateAction<string | null>>
+  onSelect: React.Dispatch<React.SetStateAction<string | null>>;
 };
 const TableData: FC<TableDataProps> = ({ data, onSelect }) => {
   const { deleteDocument } = useFireStore('tasks');
@@ -27,10 +27,20 @@ const TableData: FC<TableDataProps> = ({ data, onSelect }) => {
 
   const renderSelectRow = () => (
     <Grid item style={{ marginTop: '25px', marginBottom: '25px' }}>
-      <Button onClick={deleteTasks} variant="contained">Delete</Button>
-      {selected.length === 1 && <Button variant='contained' style={{ marginLeft: '15px' }} color='secondary' onClick={handleEditMode} >Edit</Button>}
-    </Grid >
-
+      <Button onClick={deleteTasks} variant="contained">
+        Delete
+      </Button>
+      {selected.length === 1 && (
+        <Button
+          variant="contained"
+          style={{ marginLeft: '15px' }}
+          color="secondary"
+          onClick={handleEditMode}
+        >
+          Edit
+        </Button>
+      )}
+    </Grid>
   );
 
   return (
@@ -48,8 +58,14 @@ const TableData: FC<TableDataProps> = ({ data, onSelect }) => {
           />
         </div>
       </Grid>
-      {selected.length ? renderSelectRow() : <Typography style={{ padding: '10px' }} variant="overline" display="block" gutterBottom>Select a row to edit or multiple to delete.</Typography>}
-    </Grid >
+      {selected.length ? (
+        renderSelectRow()
+      ) : (
+        <Typography style={{ padding: '10px' }} variant="overline" display="block" gutterBottom>
+          Select a row to edit or multiple to delete.
+        </Typography>
+      )}
+    </Grid>
   );
 };
 export default TableData;

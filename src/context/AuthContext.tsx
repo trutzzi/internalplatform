@@ -1,6 +1,4 @@
-import {
-  createContext, Reducer, Dispatch, useEffect, useReducer,
-} from 'react';
+import { createContext, Reducer, Dispatch, useEffect, useReducer } from 'react';
 import { projectAuth } from '../firebase/config';
 import { useFireStore, UserWithProps } from '../hooks/useFirestore';
 
@@ -10,12 +8,12 @@ type ContextProps = {
   dispatch: Dispatch<Action>;
 };
 
-type Action = { type: string, payload: any };
+type Action = { type: string; payload: any };
 
 const initialState = {
   user: null,
   authIsReady: false,
-  dispatch: () => null,
+  dispatch: () => null
 };
 
 type State = {
@@ -23,10 +21,7 @@ type State = {
   authIsReady: boolean;
 };
 
-export const authReducer: Reducer<State, Action> = (
-  state: State,
-  action: Action,
-) => {
+export const authReducer: Reducer<State, Action> = (state: State, action: Action) => {
   switch (action.type) {
     case 'LOGIN':
       return { ...state, user: action.payload };
@@ -52,16 +47,16 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
       (async () => {
         if (user) {
           const isAdmin = await getCollectionBy('uid', user?.uid);
-          const userWithProps = { ...user, admin: isAdmin?.admin, supervisorId: '' };
+          const userWithProps = {
+            ...user,
+            admin: isAdmin?.admin,
+            supervisorId: ''
+          };
           dispatch({ type: 'AUTH_IS_READY', payload: userWithProps });
         }
       })();
     });
   }, []);
 
-  return (
-    <AuthContext.Provider value={{ ...state, dispatch }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ ...state, dispatch }}>{children}</AuthContext.Provider>;
 }

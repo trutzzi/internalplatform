@@ -1,6 +1,4 @@
-import {
-  CircularProgress, Container, Grid, Typography,
-} from '@mui/material';
+import { CircularProgress, Container, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { useFireStore } from '../../hooks/useFirestore';
@@ -14,12 +12,11 @@ function MyTasks() {
   const { user, authIsReady } = useAuthContext();
   const { updateDocument } = useFireStore('tasks');
 
-
   async function updatetaskSelected(params: GridCellParams) {
     console.log(params);
     if (params.field === 'done') {
       const formData = {
-        done: !params.value,
+        done: !params.value
       };
       await updateDocument(params.id.toString(), formData);
     }
@@ -39,9 +36,20 @@ function MyTasks() {
   return (
     <Container>
       <Grid>
-        <Typography variant="h3" style={{ textTransform: 'capitalize' }} component="div" gutterBottom>My tasks</Typography>
+        <Typography
+          variant="h3"
+          style={{ textTransform: 'capitalize' }}
+          component="div"
+          gutterBottom
+        >
+          My tasks
+        </Typography>
         <Grid item>
-          {data ? <TableData currentlySelected={updatetaskSelected} data={data} /> : <CircularProgress />}
+          {data ? (
+            <TableData currentlySelected={updatetaskSelected} data={data} />
+          ) : (
+            <CircularProgress />
+          )}
         </Grid>
       </Grid>
     </Container>
