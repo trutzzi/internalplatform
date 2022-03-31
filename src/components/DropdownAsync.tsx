@@ -9,6 +9,7 @@ type DropdownAsyncProps = {
   label: string;
   defaultValue?: string;
   name?: string;
+  fullWidth?: boolean;
 };
 
 const DropdownAsync: FC<DropdownAsyncProps> = ({
@@ -16,7 +17,8 @@ const DropdownAsync: FC<DropdownAsyncProps> = ({
   handleChange,
   label,
   defaultValue,
-  name
+  name,
+  fullWidth = true
 }) => {
   const renderItems = () =>
     items.map((item, index) => (
@@ -28,11 +30,9 @@ const DropdownAsync: FC<DropdownAsyncProps> = ({
     <>
       <InputLabel>{label}</InputLabel>
       <Select
+        fullWidth={fullWidth}
         placeholder="Select value"
         label={label}
-        style={{
-          width: '220px'
-        }}
         required
         name={name}
         value={defaultValue ?? ''}

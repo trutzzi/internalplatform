@@ -7,8 +7,10 @@ import { useFireStore } from '../../hooks/useFirestore';
 type TableDataProps = {
   data: TableDefinition[];
   onSelect: React.Dispatch<React.SetStateAction<string | null>>;
+  currentlySelected: any;
+  isBulkEdit: boolean;
 };
-const TableData: FC<TableDataProps> = ({ data, onSelect }) => {
+const TableData: FC<TableDataProps> = ({ data, onSelect, currentlySelected, isBulkEdit }) => {
   const { deleteDocument } = useFireStore('tasks');
   const [selected, setSelected] = useState<any>([]);
 
@@ -30,16 +32,6 @@ const TableData: FC<TableDataProps> = ({ data, onSelect }) => {
       <Button onClick={deleteTasks} variant="contained">
         Delete
       </Button>
-      {selected.length === 1 && (
-        <Button
-          variant="contained"
-          style={{ marginLeft: '15px' }}
-          color="secondary"
-          onClick={handleEditMode}
-        >
-          Edit
-        </Button>
-      )}
     </Grid>
   );
 
@@ -53,7 +45,8 @@ const TableData: FC<TableDataProps> = ({ data, onSelect }) => {
             pageSize={25}
             autoHeight
             rowsPerPageOptions={[5]}
-            checkboxSelection
+            checkboxSelection={isBulkEdit}
+            onCellClick={currentlySelected}
             onSelectionModelChange={handleChange}
           />
         </div>

@@ -88,6 +88,7 @@ export default function Create() {
                 <DropdownAsync
                   label="Employee assigned"
                   defaultValue={assigned}
+                  fullWidth={false}
                   handleChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
                     setAssigned(e.target.value)
                   }

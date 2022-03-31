@@ -94,7 +94,11 @@ export function Navigator() {
     const links = [];
     for (const page in pages) {
       links.push(
-        <Link style={{ textDecoration: 'none' }} key={page} to={`/${pages[page].href}`}>
+        <Link
+          style={{ textDecoration: 'none', color: 'black' }}
+          key={page}
+          to={`/${pages[page].href}`}
+        >
           <MenuItem key={page} onClick={handleCloseNavMenu}>
             <Typography textAlign="center">{pages[page].title}</Typography>
           </MenuItem>
@@ -109,7 +113,7 @@ export function Navigator() {
     for (const page in pages) {
       links.push(
         <Link style={{ textDecoration: 'none' }} key={page} to={`/${pages[page].href}`}>
-          <Button variant="text" color="secondary" key={page} onClick={handleCloseNavMenu}>
+          <Button variant="text" style={{ color: 'white' }} key={page} onClick={handleCloseNavMenu}>
             {pages[page].title}
           </Button>
         </Link>
@@ -124,7 +128,7 @@ export function Navigator() {
           <Typography
             variant="h4"
             noWrap
-            color="secondary"
+            color="white"
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
@@ -183,7 +187,7 @@ export function Navigator() {
                     alt={user?.displayName || ''}
                     src="feature"
                   />
-                  <Typography color="secondary" style={{ textTransform: 'uppercase' }} variant="h6">
+                  <Typography color="white" style={{ textTransform: 'uppercase' }} variant="h6">
                     {user.displayName}
                   </Typography>
                 </IconButton>

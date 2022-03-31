@@ -99,6 +99,7 @@ const DrawerTask: FC<DrawerProps> = ({ uid, close }) => {
               </Grid>
               <Grid item>
                 <TextField
+                  fullWidth
                   name="title"
                   onChange={handleFormChange}
                   required
@@ -108,6 +109,7 @@ const DrawerTask: FC<DrawerProps> = ({ uid, close }) => {
               </Grid>
               <Grid item>
                 <TextField
+                  fullWidth
                   name="description"
                   onChange={handleFormChange}
                   required
@@ -138,6 +140,7 @@ const DrawerTask: FC<DrawerProps> = ({ uid, close }) => {
               </Grid>
               <Grid item>
                 <TextField
+                  fullWidth
                   name="deadline"
                   label="Deadline"
                   type="datetime-local"
